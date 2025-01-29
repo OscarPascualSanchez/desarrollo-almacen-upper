@@ -157,7 +157,7 @@
 										<i class='site-menu-icon fa fa-angle-right'></i>
 										<span class='site-menu-title'>
 											<!--Master of Goods-->
-											Gestor de inventarios
+											Gestor
 										</span>
 								</li>
 								<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '3') { ?>
@@ -166,6 +166,17 @@
 											<i class='site-menu-icon fa fa-angle-right'></i>
 											<span class='site-menu-title'>
 												Gestión de arribos
+												<!--Customer-->
+											</span>
+										</a>
+									</li>
+								<?php } ?>
+								<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '3') { ?>
+									<li class='site-menu-item'>
+										<a href='<?php echo base_url(); ?>website/inventory' class='animsition-link'>
+											<i class='site-menu-icon fa fa-angle-right'></i>
+											<span class='site-menu-title'>
+												Gestor de inventarios
 												<!--Customer-->
 											</span>
 										</a>
