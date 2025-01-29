@@ -5100,70 +5100,96 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 			$data['web']					= $this->ADM->identitaswebsite();
 			@date_default_timezone_set('Asia/Jakarta');
 			$data['dashboard_info']		= FALSE;
-			$data['breadcrumb']				= 'Mercancía';
-			$data['content'] 			= 'admin/content/website/barang';
+			$data['breadcrumb']		    = 'Producto';
+			$data['content'] 			= 'admin/content/website/inventory';
 			$data['menu_terpilih']		= '1';
 			$data['submenu_terpilih']	= '13';
 			$data['action']				= (empty($filter1)) ? 'view' : $filter1;
 			$data['validate']			= array(
-				'nama_barang' => 'Name',
-				'merek' => 'Brand'
+				'id_inventory' => 'id inventario',
+				'product_name' => 'producto'
 			);
 			if ($data['action'] == 'view') {
-				$data['berdasarkan']		= array('nama_barang' => 'Nombre', 'merek' => 'Marca');
-				$data['cari']				= ($this->input->post('cari')) ? $this->input->post('cari') : 'nama_barang';
+				$data['berdasarkan']		= array('id_inventory' => 'id inventario', 'product_name' => 'Nombre de producto');
+				$data['cari']				= ($this->input->post('cari')) ? $this->input->post('cari') : 'id_inventory';
 				$data['q']					= ($this->input->post('q')) ? $this->input->post('q') : '';
 				$data['halaman']			= (empty($filter2)) ? 1 : $filter2;
 				$data['batas']				= 10;
 				$data['page']				= ($data['halaman'] - 1) * $data['batas'];
-				$like_barang[$data['cari']]	= $data['q'];
-				$data['jml_data']			= $this->ADM->count_all_barang('', $like_barang);
+				$like_inventory[$data['cari']]	= $data['q'];
+				$data['stocks_by_arrival'] = $this->ADM->get_stock_by_arrival($id_product, $identification_number);
+    $data['total_stock_by_product'] = $this->ADM->get_total_stock_by_product($id_product);
+    //$data['general_stock'] = $this->ADM->get_general_stock();
+				$data['jml_data']			= $this->ADM->count_all_inventory('', $like_inventory);
 				$data['jml_halaman'] 		= ceil($data['jml_data'] / $data['batas']);
 			} elseif ($data['action'] == 'tambah') {
 				if ($data['admin']->admin_level_kode == 1 || $data['admin']->admin_level_kode == 2) {
-					$data['onload']				= 'barang';
-					$data['nama_barang']	= ($this->input->post('nama_barang')) ? $this->input->post('nama_barang') : '';
-					$data['merek']	= ($this->input->post('merek')) ? $this->input->post('merek') : '';
+					$data['onload']          = 'inventory';
+					$data['id_product']	     = ($this->input->post('id_product')) ? $this->input->post('id_product') : '';
+					$data['product_name']	 = ($this->input->post('product_name')) ? $this->input->post('product_name') : '';
+					$data['identification_number'] = ($this->input->post('identification_number')) ? $this->input->post('product_name') : '';
+					$data['main_stock']      = ($this->input->post('main_stock')) ? $this->input->post('main_stock') : '';
+					$data['damaged_stock']   = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : '';
+					$data ['good_stock']     = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : '';
+					$data ['type_movements'] = ($this->input->post('type_movements')) ? $this->input->post('type_movements') :  '';
+					$data ['date']           = ($this->input->post('date')) ? $this->input->post('date') : '';
 					$simpan						= $this->input->post('simpan');
 					if ($simpan) {
-						$insert['nama_barang']			= validasi_sql($data['nama_barang']);
-						$insert['merek']			= validasi_sql($data['merek']);
-						$insert['stock']			= 0;
-						$this->ADM->insert_barang($insert);
-						$this->session->set_flashdata('success', 'New item has been successfully added!,');
-						redirect("website/barang");
+						$insert['id_product']			  = validasi_sql($data['id_product']);
+						$insert['product_name']			  = validasi_sql($data['product_name']);
+						$insert['identification_number']  = validasi_sql($data['identification_number']);
+						$insert['main_stock']             = validasi_sql($data['main_stock']);
+						$insert['damaged_stock']          = validasi_sql($data['damaged_stock']);
+						$insert['good_stock']			  = validasi_sql($data['good_stock']);
+						$insert['type_movements']         = validasi_sql($data['type_movements']);
+						$insert['date']                   = validasi_sql($data['date']);
+						$this->ADM->insert_inventory($insert);
+						$this->session->set_flashdata('success', 'New register has been successfully added!,');
+						redirect("website/inventory");
 					}
 				} else {
-					redirect("website/barang");
+					redirect("website/inventory");
 				}
 			} elseif ($data['action'] == 'edit') {
 				if ($data['admin']->admin_level_kode == 1 || $data['admin']->admin_level_kode == 2) {
-					$data['onload']				= 'nama_barang';
-					$where_barang['id_barang']	= $filter2;
-					$barang				= $this->ADM->get_barang('*', $where_barang);
-					$data['id_barang']	= ($this->input->post('id_barang')) ? $this->input->post('id_barang') : $barang->id_barang;
-					$data['nama_barang']	= ($this->input->post('nama_barang')) ? $this->input->post('nama_barang') : $barang->nama_barang;
-					$data['merek']	= ($this->input->post('merek')) ? $this->input->post('merek') : $barang->merek;
-					$simpan						= $this->input->post('simpan');
+					$data['onload']				        = 'id_inventory';
+					$where_inventory['id_inventory']	= $filter2;
+					$inventory	= $this->ADM->get_inventory('*', $where_inventory);
+					$data['id_inventory']	 =   ($this->input->post('id_inventory')) ? $this->input->post('id_inventory') : $inventory->id_inventory;
+					$data['id_product']	     =   ($this->input->post('id_product')) ? $this->input->post('id_product') : $inventory->id_product;
+					$data['product_name']	 =   ($this->input->post('product_name')) ? $this->input->post('product_name') : $inventory->product_name;
+					$data['identification_number'] = ($this->input->post('identification_number')) ? $this->input->post('identification_number') : $inventory->identification_number;
+					$data['main_stock']      =   ($this->input->post('main_stock')) ? $this->input->post('main_stock') : $inventory->main_stock;
+					$data['damaged_stock']   =   ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $inventory->damaged_stock;
+					$data['good_stock']      =   ($this->input->post('good_stock'))  ? $this->input->post('good_stock')   : $inventory->good_stock;
+					$data['type_movements']  =   ($this->input->post('type_movements')) ? $this->input->post('type_movements') : $inventory->type_movements;
+					$data['date']            =   ($this->input->post('date'))   ? $this->input->post('date')   : $inventory->date;
+					$simpan				     =   $this->input->post('simpan');
 					if ($simpan) {
-						$where_edit['id_barang']	= $data['id_barang'];
-						$edit['nama_barang']	= $data['nama_barang'];
-						$edit['merek']	= $data['merek'];
-						$this->ADM->update_barang($where_edit, $edit);
-						$this->session->set_flashdata('success', 'Item has been edited successfully!,');
-						redirect("website/barang");
+						$where_edit['id_inventory']	= $data['id_inventory'];
+						$edit['id_product']	= $data['id_product'];
+						$edit['product_name']	= $data['product_name'];
+						$edit['identification_number'] = $data['identification_number'];
+						$edit['main_stock'] = $data['main_stock'];
+						$edit['damaged_stock'] = $data['damaged_stock'];
+						$edit['good_stock']  = $data['good_stock'];
+						$edit['type_movements'] = $data['type_movements'];
+						$edit['date'] = $data['date'];
+						$this->ADM->update_inventory($where_edit, $edit);
+						$this->session->set_flashdata('success', 'Register has been edited successfully!,');
+						redirect("website/inventory");
 					}
 				} else {
-					redirect("website/barang");
+					redirect("website/inventory");
 				}
 			} elseif ($data['action'] == 'hapus') {
 				if ($data['admin']->admin_level_kode == 1 || $data['admin']->admin_level_kode == 2) {
-					$where_delete['id_barang']		= validasi_sql($filter2);
-					$this->ADM->delete_barang($where_delete);
-					$this->session->set_flashdata('success', 'Item has been successfully removed!,');
-					redirect("website/barang");
+					$where_delete['id_inventory']	=  validasi_sql($filter2);
+					$this->ADM->delete_inventory($where_delete);
+					$this->session->set_flashdata('success', 'Register has been successfully removed!,');
+					redirect("website/inventory");
 				} else {
-					redirect("website/barang");
+					redirect("website/inventory");
 				}
 			}
 			$this->load->vars($data);
