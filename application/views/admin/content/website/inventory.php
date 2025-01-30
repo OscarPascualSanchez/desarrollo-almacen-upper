@@ -5,7 +5,7 @@
         <h3>
             <?php echo $breadcrumb; ?>
         </h3>
-        <p><!--Information About--> Información sobre la
+        <p><!--Information About--> Información sobre el
             <?php echo $breadcrumb; ?>
         </p>
     </div>
@@ -14,7 +14,7 @@
             <div class="col-md-12">
                 <div class="panel rounded-0">
                     <div class="panel-heading">
-                        <h5 class="panel-title">Ver datos de la
+                        <h5 class="panel-title">Ver datos del
                             <?php echo $breadcrumb; ?> 
                         </h5>
                     </div>
@@ -71,64 +71,33 @@
                                 </form>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered">
-                                    <thead>
-                                        <th width=80>Id </t>  
-                                        <th width=80>Id Producto</th>
-                                        <th width=140>Nombre</th> <!--Name-->
-                                        <th width=140>Stock Inicial</th> <!--Stock Inicial-->
-                                        <th width=140>Stock dañado</th> <!--Stock dañado-->
-                                        <th width=140>Stock Ok</th> <!--Stock Ok-->
-                                        <th width=270>Fecha</th> <!--Date-->
-                            <?php if ($admin->admin_level_kode == 1) { ?>
-                                        <th class="text-center">Acción</th> <!--Action-->
-                            <?php } ?>
-                                    </thead>
-                                    <tbody>
-                                        <?php 
-	                            $i	= $page+1;
-                                $like_barang[$cari]			= $q;
-	                        if ($jml_data > 0){
-                                foreach ($this->ADM->grid_all_inventory('*, (COALESCE((SELECT SUM(stock) FROM inventory where id_ = arrivaltwo.id_arrival and type_movements == "Entrada"),0) - COALESCE((SELECT SUM(stock) FROM inventory where id_arrival = arrivaltwo.id_arrival and type_movements == "Entrada"),0)) as qty', 'product_name', 'ASC', $batas, $page, '', $like_inventory) as $row){
-	                            ?>
-                                        <tr>
-                                            <td>
-                                                <?php echo $i; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row->product_name;?>
-                                            </td>
-                                           
-                                            <td class="text-center" style="color: red !important">
-                                                <?php echo $row->qty;?>
-                                            </td>
-                                            <td>
-                                                <b>Creado:</b> <?php echo dateIndo($row->inventory_created);?><br>
-                                                <b>Última modificación:</b> <?php echo dateIndo($row->inventory_updated);?>
-                                </td>
-                            <?php if ($admin->admin_level_kode == 1) { ?>
-                                            <td class="text-center action">
-                                                <a class="btn-update" href="<?php echo site_url();?>website/inventory/edit/<?php echo $row->id_arrival;?>">
-													<i class="icon wb-pencil"></i>
-												</a>
-                                                <a class="text-danger" href="javascript:;" data-id="<?php echo $row->id_barang;?>" data-toggle="modal" data-target="#modal-konfirmasi"
-                                                    title="<?php echo $row->product_name;?>">
-													<i class="icon wb-trash"></i>
-												</a>
-                                            </td>
-                            <?php } ?>
-                                        </tr>
-                                        <?php
-                                    $i++;
-	                            } 
-	                        } else {
-                                ?>
-                                            <tr>
-                                                <td colspan="7">¡Aún no hay datos!</td> <!--No data yet!-->
-                                            </tr>
-                                            <?php } ?>
-                                    </tbody>
-                                </table>
+                            <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID Producto</th>
+                                    <th>Nombre Producto</th>
+                                    <th>Stock Total</th>
+                                    <th>Stock Dañado</th>
+                                    <th>Stock Bueno</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($stocks_by_product)) { 
+                                    foreach ($stocks_by_product as $stock) { ?>
+                                    <tr>
+                                        <td><?php echo $stock->id_product; ?></td>
+                                        <td><?php echo $stock->product_name; ?></td>
+                                        <td><?php echo $stock->total_stock_arrival; ?></td>
+                                        <td><?php echo $stock->total_damaged_stock_arrival; ?></td>
+                                        <td><?php echo $stock->total_ok_stock_arrival; ?></td>
+                                    </tr>
+                                <?php } } else { ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay datos disponibles</td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                             </div>
                             <div class="wrapper">
                                 <div class="paging">
