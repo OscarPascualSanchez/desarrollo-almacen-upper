@@ -3075,6 +3075,93 @@ public function update_position_availability($id_position, $is_available)
     public function get_product_by_id($id_product) {
         return $this->db->get_where('products', ['id_product' => $id_product])->row();
     }
+	
+	//CONFIGURATION TABLE INVENTORY
+	public function insert_inventory($data)
+	{
+		$this->db->insert("inventory", $data);
+	}
+
+	public function update_inventory($where, $data)
+	{
+		$this->db->update("inventory", $data, $where);
+	}
+
+	public function delete_inventory($where)
+	{
+		$this->db->delete("inventory", $where);
+	}
+
+	public function get_inventory($select, $where)
+	{
+		$data = "";
+		$this->db->select($select);
+		$this->db->from("inventory");
+		$this->db->where($where);
+		$this->db->limit(1);
+		$Q = $this->db->get();
+		if ($Q->num_rows() > 0) {
+			$data = $Q->row();
+		}
+		$Q->free_result();
+		return $data;
+	}
+
+	public function grid_all_inventory($select, $sidx, $sord, $limit, $start, $where = "", $like = "")
+	{
+		$data = "";
+		$this->db->select($select);
+		$this->db->from("inventory");
+		if ($where) {
+			$this->db->where($where);
+		}
+		if ($like) {
+			foreach ($like as $key => $value) {
+				$this->db->like($key, $value);
+			}
+		}
+		$this->db->order_by($sidx, $sord);
+		$this->db->limit($limit, $start);
+		$Q = $this->db->get();
+		if ($Q->num_rows() > 0) {
+			$data = $Q->result();
+		}
+		$Q->free_result();
+		return $data;
+	}
+
+	public function count_all_inventory($where = "", $like = "")
+	{
+		$this->db->select("*");
+		$this->db->from("inventory");
+		if ($where) {
+			$this->db->where($where);
+		}
+		if ($like) {
+			foreach ($like as $key => $value) {
+				$this->db->like($key, $value);
+			}
+		}
+		$Q = $this->db->get();
+		$data = $Q->num_rows();
+		return $data;
+	}
+
+	public function get_total_stock_per_product()
+	{
+		$this->db->select('id_product, product_name, 
+							SUM(stock) AS total_stock_arrival, 
+							SUM(damaged_stock) AS total_damaged_stock_arrival, 
+							SUM(good_stock) AS total_ok_stock_arrival');
+		$this->db->from('arrivalnew');
+		$this->db->where('id_movement IS NOT NULL');
+		$this->db->group_by('id_product');
+		$query = $this->db->get();
+		return $query->result(); // Devuelve un array de objetos
+	}
+	
+
+
 
 	//CONFIGURATION TABLE ADMIN
 	public function insert_admin($data)
