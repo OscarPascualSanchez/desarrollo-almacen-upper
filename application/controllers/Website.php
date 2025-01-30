@@ -5117,8 +5117,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 				$data['batas']				= 10;
 				$data['page']				= ($data['halaman'] - 1) * $data['batas'];
 				$like_inventory[$data['cari']]	= $data['q'];
-				$data['stocks_by_arrival'] = $this->ADM->get_stock_by_arrival($id_product, $identification_number);
-    $data['total_stock_by_product'] = $this->ADM->get_total_stock_by_product($id_product);
+				$data['stocks_by_product'] = $this->ADM->get_total_stock_per_product();
     //$data['general_stock'] = $this->ADM->get_general_stock();
 				$data['jml_data']			= $this->ADM->count_all_inventory('', $like_inventory);
 				$data['jml_halaman'] 		= ceil($data['jml_data'] / $data['batas']);
