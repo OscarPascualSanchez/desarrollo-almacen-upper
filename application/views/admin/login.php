@@ -69,7 +69,7 @@
 				<h2 class="brand-text">
 					<!-- <?php echo $web->identitas_website;?> -->
 					<!--Warehouse Management System-->
-					Sistema de Gestión de Almacen
+					Sistema de Gestión de Almacen Prueba
 				</h2>
 			</div>
 
