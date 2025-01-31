@@ -2864,7 +2864,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 				$data['halaman']			= (empty($filter2)) ? 1 : $filter2;
 				$data['batas']				= 10;
 				$data['page']				= ($data['halaman'] - 1) * $data['batas'];
-				$like_arrival[$data['cari']]	= $data['q'];
+				$like_arrivaltwo[$data['cari']]	= $data['q'];
 				$data['jml_data']			= $this->ADM->count_all_arrivaltwo('', $like_arrival);
 				$data['jml_halaman'] 		= ceil($data['jml_data'] / $data['batas']);
 				
@@ -2992,7 +2992,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 			} elseif ($data['action'] == 'edit') {
 				if ($data['admin']->admin_level_kode == 1) {
 					// Recupera los datos del arribo existente
-					$where_arrivaltwo['id_main'] = $filter2;
+					$where_arrivaltwo['id_arrivaltwo'] = $filter2;
 					$arrivaltwo = $this->ADM->get_arrivaltwo('*', $where_arrivaltwo);
 
 					// Verificar si se encontró el arribo
@@ -3384,7 +3384,246 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 				}
 			
 	
-			} elseif ($data['action'] == 'editar') {
+			}elseif ($data['action'] == 'editar2') {
+				if ($data['admin']->admin_level_kode == 1) {
+					// Recupera los datos del arribo existente
+					$where_arrivaltwo['id_main'] = $filter2;
+					$arrivaltwo = $this->ADM->get_arrivaltwo('*', $where_arrivaltwo);
+
+					
+					// Procesar los productos asociados al arribo
+					$data['productss'] = $this->ADM->get_all_products_by_identification($arrivaltwo->identification_number);
+
+					//Generar subregistros basados en quantity_pallet
+					$generatedProducts = [];
+					foreach ($data['productss'] as $product) {
+						// Calcula el stock por pallet
+						// Verifica si el id_movement es NULL
+						if (empty($product->id_movement)) {
+							$stockPerPallet = $product->quantity_pallet > 0 ? $product->stock / $product->quantity_pallet : 0;
+							for ($i  = 1; $i <= $product->quantity_pallet; $i++) {
+								$generatedProducts[] = (object) [
+									'id_main'                  =>  $product->id_main,
+									'id_arrival'               =>  $product->id_arrival,
+									'id_movement'              =>  "{$product->id_arrival}.$i", // Subregistro
+									'id_product'               =>  $product->id_product,
+									'product_name'             =>  $product->product_name,
+									'id_platform'              =>  $product->id_platform,
+									'type_platform'            =>  $product->type_platform,
+									'stock'                    =>  $stockPerPallet,
+									'quantity_product_pallet'  =>  $product->quantity_product_pallet,
+									'quantity_pallet'          =>   1, // Cada subregistro tiene un pallet
+									'damaged_pallets'          =>  $product->damaged_pallets,
+									'damaged_stock'            =>  $product->damaged_stock,
+									'good_pallet'              =>  $product->good_pallets,
+									'good_stock'               =>  $stockPerPallet,
+									'type_movements'          =>  $product->type_movements,
+									'expiration_date'          =>  $product->expiration_date,
+									'note'                     =>  $product->note,
+									'status'                   =>  $product->status,
+								];
+							}
+						}
+					}
+					$data['generated_products'] = $generatedProducts;
+
+					// Actualizar datos generales del arribo
+					$products = $this->input->post('products_update');
+					$products['id_main']           = $this->input->post('id_main') ?: $arrivaltwo->id_main;
+					$products['id_arrival']        = $this->input->post('id_arrival') ?: $arrivaltwo->id_arrrival;
+					$data['identification_number'] = $this->input->post('identification_number') ?: $arrivaltwo->identification_number;
+					$data['sale_order']            = $this->input->post('sale_order') ?: $arrivaltwo->sale_order;
+					$data['event_type']            = $this->input->post('event_type') ?: $arrivaltwo->event_type;
+					//$data['id_supplier'] = $arrivaltwo->id_supplier;
+					
+					//$data['nama_supplier'] = $arrivaltwo->nama_supplier;
+					//$data['nama_supplier']       = $this->input->post('id_supplier') ? $this->ADM->get_nama_supplier($data['id_supplier']) : $arrivaltwo->nama_supplier;
+					$data['id_supplier']       = $this->input->post('id_supplier') ?: $arrivaltwo->id_supplier;
+					$data['nama_supplier']     = $this->input->post('nama_supplier') ?: $arrivaltwo->nama_supplier;
+					
+					$data['id_container']      = $this->ADM->get_id_container_by_number($this->input->post('container_number'));
+					$data['container_number']  = $this->input->post('container_number') ?: $arrivaltwo->container_number;
+					$data['container_type']    = $this->ADM->get_container_type_by_number($data['container_number']);
+					$data['id_origin']         = $this->input->post('id_origin') ?: $arrivaltwo->id_origin;
+					$data['state']             = $this->input->post('id_origin') ? $this->ADM->get_state($data['id_origin']) : $arrivaltwo->state;
+					$data['id_maneuver']       = $this->input->post('id_maneuver') ?: $arrivaltwo->id_maneuver;
+					$data['type_maneuver']     = $this->input->post('id_maneuver') ? $this->ADM->get_type_maneuver($data['id_maneuver']) : $arrivaltwo->type_maneuver;
+					$data['event_date']        = $this->input->post('event_date') ?: $arrivaltwo->event_date;
+					$data['id_transport']      = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
+					$data['platenumber']       = $this->input->post('platenumber') ?: $arrivaltwo->platenumber;
+					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['id_driver']         = $this->input->post('id_driver') ?: $arrivaltwo->id_driver;
+					$data['name_driver']       = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrivaltwo->name_driver;
+
+					
+					$products['id_product']    = ($this->input->post('id_product')) ? $this->input->post('id_product') : $arrivaltwo->id_product;
+					$products['product_name']  = ($this->input->post('id_product')) ? $this->ADM->get_product_name1($this->input->post('id_product')) : $arrivaltwo->product_name;
+					$producs['id_platform']	   = ($this->input->post('id_platform')) ? $this->input->post('id_platform') : $arrivaltwo->id_platform;
+					if ($this->input->post('id_platform')) {
+						$products['type_platform'] = $this->ADM->get_type_platform($products['id_platform']);
+					} else {
+						$products['type_platform'] = $arrivaltwo->type_platform;
+					}
+					$products['stock']	                  = ($this->input->post('stock')) ? $this->input->post('stock') : $arrivaltwo->stock;
+					$products['quantity_product_pallet']  = ($this->input->post('quantity_product_pallet')) ? $this->input->post('quantity_product_pallet') : $arrivaltwo->quantity_product_pallet;
+					$products['quantity_pallet']	      = ($this->input->post('quantity_pallet')) ? $this->input->post('quantity_pallet') : $arrivaltwo->quantity_pallet;
+					$products['damaged_pallets']	      = ($this->input->post('damaged_pallets')) ? $this->input->post('damaged_pallets') : $arrivaltwo->damaged_pallets;
+					$products['damaged_stock']	          = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $arrivaltwo->damaged_stock;
+					$products['good_pallets']	          = ($this->input->post('good_pallets')) ? $this->input->post('good_pallets') : $arrivaltwo->good_pallets;
+					$products['good_stock']	              = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : $arrivaltwo->good_stock;
+					$products['type_movements']           = ($this->input->post('type_movements')) ? $this->input->post('type_movements') : $arrivaltwo->type_movements;
+					$products['expiration_date']	      = ($this->input->post('expiration_date')) ? $this->input->post('expiration_date') : $arrivaltwo->expiration_date;
+					// Datos adicionales del producto
+					$data['arrival_time']        = $this->input->post('arrival_time') ?: $arrivaltwo->arrival_time;
+					$data['maneuver_start']      = $this->input->post('maneuver_start') ?: $arrivaltwo->maneuver_start;
+					$data['maneuver_end']        = $this->input->post('maneuver_end') ?: $arrivaltwo->maneuver_end;
+					$data['departure_time']      = $this->input->post('departure_time') ?: $arrivaltwo->departure_time;
+					$products['note']            = $this->input->post('note') ?: $arrivaltwo->note;
+					$products['status']          = $this->input->post('status') ?: $arrivaltwo->status;
+					$data['created_by']          = $this->input->post('created_by') ?: $arrivaltwo->created_by;
+					$data['created_date']        = $this->input->post('created_date') ?: $arrivaltwo->created_date;
+					$data['updated_by']          = ($this->input->post('updated_by')) ? $this->input->post('updated_by') : $arrivaltwo->updated_by;
+					$data['updated_date']        = ($this->input->post('updated_date')) ? $this->input->post('updated_date') : $arrivaltwo->updated_date;
+
+					if ($this->input->post('simpan')) {
+
+
+						/*
+                        echo '<pre>';
+						print_r($_POST);
+						echo '</pre>';
+						echo '<pre>';
+						print_r($data);
+						echo '</pre>';
+					
+						*/
+
+						
+					 /*	foreach ($products as $newgenerated) {
+							echo '<pre>';
+							print_r($newgenerated);
+							echo '</pre>';
+
+							// Continuar con la inserción...
+						}*/
+
+						if($products){
+							foreach ($products as $newgenerated){
+								$insert = array(
+									'id_main' => validasi_sql($newgenerated['id_main']),
+									'id_movement' => validasi_sql($newgenerated['id_movement']),
+									'id_arrival'  => validasi_sql($newgenerated['id_arrival']),
+									'sale_order' => validasi_sql($data['sale_order']),
+									'identification_number' => ($data['identification_number']),
+									'nama_supplier' => validasi_sql($data['nama_supplier']),
+									'id_supplier' => validasi_sql($data['id_supplier']),
+									//'nama_supplier' => $this->ADM->get_nama_supplier1($products['id_supplier'])->nama_supplier,
+									//'id_supplier' => validasi_sql($data['id_supplier']),
+									//'nama_supplier' => validasi_sql($data['nama_supplier']),
+									'id_product' => validasi_sql($newgenerated['id_product']),
+									'product_name' => validasi_sql($newgenerated['product_name']),
+									'event_type' => validasi_sql($data['event_type']),
+									'id_container' => validasi_sql($data['id_container']),
+									'container_number' => validasi_sql($data['container_number']),
+									'container_type' => validasi_sql($data['container_type']),
+									'state' => validasi_sql($data['state']),
+									'id_origin' => validasi_sql($data['id_origin']),
+									'type_maneuver' => validasi_sql($data['type_maneuver']),
+									'id_maneuver' => validasi_sql($data['id_maneuver']),
+									'event_date' => validasi_sql($data['event_date']),
+									'id_platform' => validasi_sql($newgenerated['id_platform']),
+									'type_platform' => validasi_sql($newgenerated['type_platform']),
+									'id_transport' => validasi_sql($data['id_transport']),
+									'platenumber' =>validasi_sql($data['platenumber']),
+									'vehicletype' => validasi_sql($data['vehicletype']),
+									'name_driver' => validasi_sql($data['name_driver']),
+									'id_driver' => validasi_sql($data['id_driver']),
+									'stock' => validasi_sql($newgenerated['stock']),
+									'quantity_product_pallet'  => validasi_sql($newgenerated['quantity_product_pallet']),
+									'quantity_pallet' => validasi_sql($newgenerated['quantity_pallet']),
+									'damaged_pallets' => validasi_sql($newgenerated['damaged_pallets']),
+									'damaged_stock'   => validasi_sql($newgenerated['damaged_stock']),
+									'good_pallets' => validasi_sql($newgenerated['good_pallets']),
+									'good_stock' => validasi_sql($newgenerated['good_stock']),
+									'type_movements' => validasi_sql($newgenerated['type_movements']),
+									'arrival_time' => validasi_sql($data['arrival_time']),
+									'maneuver_start' => validasi_sql($data['maneuver_start']),
+									'id_type_movement' => validasi_sql($newgenerated['id_type_movement']),
+									'type_movements' => validasi_sql($newgenerated['type_movements']),
+									'movement_date' => validasi_sql($newgenerated['movement_date']),
+									'id_position' => validasi_sql($newgenerated['id_position']),
+									'row_location' => validasi_sql($newgenerated['row_location']),
+									'column_location' => validasi_sql($newgenerated['column_location']),
+									'rack_number' => validasi_sql($newgenerated['rack_number']),
+									'level' => validasi_sql($newgenerated['level']),
+									'movement_created_by' => validasi_sql($newgenerated['movement_created_by']),
+									'expiration_date' => validasi_sql($newgenerated['expiration_date']),
+									'maneuver_end' => validasi_sql($data['maneuver_end']),
+									'departure_time' =>validasi_sql($data['departure_time']),
+									'note' => validasi_sql($newgenerated['note']),
+									'status' => validasi_sql($newgenerated['status']),
+									'created_by' => validasi_sql($data['created_by']),
+								    //'identification_number' => $data['identification_number']	
+				                );
+
+
+								$this->ADM->insert_arrivaltwo($insert);
+							}
+							$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
+
+					        redirect('website/arrival/view2');
+						}
+						 
+						// Actualizar los datos generales en todos los registros con el mismo identification_number
+						
+						
+						$general_update = array(
+							'sale_order' => validasi_sql($data['sale_order']),
+							'event_type' => validasi_sql($data['event_type']),
+							'id_supplier' => validasi_sql($data['id_supplier']),
+							'id_container' => validasi_sql($data['id_container']),
+							'container_number' => validasi_sql($data['container_number']),
+							'container_type' => validasi_sql($data['container_type']),
+							'id_origin' => validasi_sql($data['id_origin']),
+							'state' => validasi_sql($data['state']),
+							'id_maneuver' => validasi_sql($data['id_maneuver']),
+							'type_maneuver' => validasi_sql($data['type_maneuver']),
+							'event_date' => validasi_sql($data['event_date']),
+							'id_transport' => validasi_sql($data['id_transport']),
+							'platenumber' => validasi_sql($data['platenumber']),
+							'vehicletype' => validasi_sql($data['vehicletype']),
+							'name_driver' => validasi_sql($data['name_driver']),
+							'id_driver' => validasi_sql($data['id_driver']),
+							'arrival_time' => validasi_sql($data['arrival_time']),
+							'maneuver_start' => validasi_sql($data['maneuver_start']),
+							'maneuver_end' => validasi_sql($data['maneuver_end']),
+							'departure_time' => validasi_sql($data['departure_time']),
+							//'updated_by' => validasi_sql($data['admin']->admin_user),
+							//'updated_date' => date('Y-m-d H:i:s')
+							'updated_by' => validasi_sql($data['updated_by']),
+							'updated_date' => validasi_sql($data['updated_date'])
+						);
+
+						// Actualiza todos los registros que comparten el mismo identification_number
+						$this->db->where('identification_number', $data['identification_number']);
+						$this->db->update('arrivaltwo', $general_update); // Cambiar de update a insertar para prueba
+
+						
+						
+						// Después de que todas las actualizaciones hayan sido procesadas
+						$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
+
+						// Redirige después de que se han actualizado todos los productos
+						redirect('website/arrival/view2');
+					}
+				} else {
+					$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
+
+					redirect('website/arrival/view2');
+				}
+			
+	
+			}elseif ($data['action'] == 'editar') {
 				if ($data['admin']->admin_level_kode == 1) {
 					// Recupera los datos del arribo existente
 					$where_arrival['id_main'] = $filter2;
