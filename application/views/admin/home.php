@@ -152,14 +152,6 @@
 								<span class='site-menu-title'>Gestor de inventarios</span> <!--Master List-->
 							</a>
 							<ul class='site-menu-sub'>
-								<li class='site-menu-item'>
-									<a href='<?php echo base_url(); ?>website/barang' class='animsition-link'>
-										<i class='site-menu-icon fa fa-angle-right'></i>
-										<span class='site-menu-title'>
-											<!--Master of Goods-->
-											Gestor
-										</span>
-								</li>
 								<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '3') { ?>
 									<li class='site-menu-item'>
 										<a href='<?php echo base_url(); ?>website/all_arrivals' class='animsition-link'>
@@ -298,17 +290,6 @@
 									</ul>
 								</li>
 
-								<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '2') { ?>
-									<li class='site-menu-item'>
-										<a href='<?php echo base_url(); ?>website/masuk' class='animsition-link'>
-											<i class='site-menu-icon fa fa-angle-right'></i>
-											<span class='site-menu-title'>
-												<!--Incoming Goods-->
-												Salidas
-											</span>
-										</a>
-									</li>
-								<?php } ?>
 								<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '2') { ?>
 									<li class='site-menu-item'>
 										<a href='<?php echo base_url(); ?>website/arrival' class='animsition-link'>
