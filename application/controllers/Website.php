@@ -2843,6 +2843,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 			$data['submenu_terpilih']	= '13';
 			$data['action']				= (empty($filter1)) ? 'view' : $filter1;
 			$data['action']				= (empty($filter1)) ? 'view2' : $filter1;
+			$data['action']				= (empty($filter1)) ? 'view3' : $filter1;
 			$data['validate']			= array(
 				'identification_number' => 'Name'
 			);
@@ -2856,6 +2857,13 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 				$like_arrival[$data['cari']]	= $data['q'];
 				$data['jml_data']			= $this->ADM->count_all_arrivaltwo('', $like_arrival);
 				$data['jml_halaman'] 		= ceil($data['jml_data'] / $data['batas']);
+
+				 // Obtener si cada registro debe tener el botón deshabilitado
+				 $data['disable_edit'] = array();
+				 $arrivals = $this->ADM->get_arrivalstwo(); // Ajusta esto a tu función que obtiene los registros
+				 foreach ($arrivals as $arrival) {
+					 $data['disable_edit'][$arrival->id_main] = $this->ADM->has_sub_movements($arrival->id_main);
+				 }
 				
 			}elseif ($data['action'] == 'view2') {
 				$data['berdasarkan']		= array('identification_number' => 'N.Identificación de evento', 'status' => 'Estatus', 'nama_supplier' => 'Proveedor', 'container_number' => 'N.identificador del contenedor', 'name_driver' => 'Conductor');
@@ -3004,41 +3012,11 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					// Procesar los productos asociados al arribo
 					$data['productss'] = $this->ADM->get_all_products_by_identification($arrivaltwo->identification_number);
 
-					//Generar subregistros basados en quantity_pallet
-					$generatedProducts = [];
-					foreach ($data['productss'] as $product) {
-						// Calcula el stock por pallet
-						// Verifica si el id_movement es NULL
-						if (empty($product->id_movement)) {
-							$stockPerPallet = $product->quantity_pallet > 0 ? $product->stock / $product->quantity_pallet : 0;
-							for ($i  = 1; $i <= $product->quantity_pallet; $i++) {
-								$generatedProducts[] = (object) [
-									'id_main'                  =>  $product->id_main,
-									'id_arrival'               =>  $product->id_arrival,
-									'id_movement'              =>  "{$product->id_arrival}.$i", // Subregistro
-									'id_product'               =>  $product->id_product,
-									'product_name'             =>  $product->product_name,
-									'id_platform'              =>  $product->id_platform,
-									'type_platform'            =>  $product->type_platform,
-									'stock'                    =>  $stockPerPallet,
-									'quantity_product_pallet'  =>  $product->quantity_product_pallet,
-									'quantity_pallet'          =>   1, // Cada subregistro tiene un pallet
-									'damaged_pallets'          =>  $product->damaged_pallets,
-									'damaged_stock'            =>  $product->damaged_stock,
-									'good_pallet'              =>  $product->good_pallets,
-									'good_stock'               =>  $stockPerPallet,
-									'type_movements'          =>  $product->type_movements,
-									'expiration_date'          =>  $product->expiration_date,
-									'note'                     =>  $product->note,
-									'status'                   =>  $product->status,
-								];
-							}
-						}
-					}
-					$data['generated_products'] = $generatedProducts;
+					
 
 					// Actualizar datos generales del arribo
 					$products = $this->input->post('products_update');
+					$products['id_arrivaltwo']     = $this->input->post('id_arrivaltwo') ?: $arrivaltwo->id_arrivaltwo;
 					$products['id_main']           = $this->input->post('id_main') ?: $arrivaltwo->id_main;
 					$products['id_arrival']        = $this->input->post('id_arrival') ?: $arrivaltwo->id_arrrival;
 					$data['identification_number'] = $this->input->post('identification_number') ?: $arrivaltwo->identification_number;
@@ -3108,95 +3086,6 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					
 						*/
 
-						
-					 /*	foreach ($products as $newgenerated) {
-							echo '<pre>';
-							print_r($newgenerated);
-							echo '</pre>';
-
-							// Continuar con la inserción...
-						}*/
-
-						if($products){
-							foreach ($products as $newgenerated){
-								$insert = array(
-									'id_main' => validasi_sql($newgenerated['id_main']),
-									'id_movement' => validasi_sql($newgenerated['id_movement']),
-									'id_arrival'  => validasi_sql($newgenerated['id_arrival']),
-									'sale_order' => validasi_sql($data['sale_order']),
-									'identification_number' => ($data['identification_number']),
-									'nama_supplier' => validasi_sql($data['nama_supplier']),
-									'id_supplier' => validasi_sql($data['id_supplier']),
-									//'nama_supplier' => $this->ADM->get_nama_supplier1($products['id_supplier'])->nama_supplier,
-									//'id_supplier' => validasi_sql($data['id_supplier']),
-									//'nama_supplier' => validasi_sql($data['nama_supplier']),
-									'id_product' => validasi_sql($newgenerated['id_product']),
-									'product_name' => validasi_sql($newgenerated['product_name']),
-									'event_type' => validasi_sql($data['event_type']),
-									'id_container' => validasi_sql($data['id_container']),
-									'container_number' => validasi_sql($data['container_number']),
-									'container_type' => validasi_sql($data['container_type']),
-									'state' => validasi_sql($data['state']),
-									'id_origin' => validasi_sql($data['id_origin']),
-									'type_maneuver' => validasi_sql($data['type_maneuver']),
-									'id_maneuver' => validasi_sql($data['id_maneuver']),
-									'event_date' => validasi_sql($data['event_date']),
-									'id_platform' => validasi_sql($newgenerated['id_platform']),
-									'type_platform' => validasi_sql($newgenerated['type_platform']),
-									'id_transport' => validasi_sql($data['id_transport']),
-									'platenumber' =>validasi_sql($data['platenumber']),
-									'vehicletype' => validasi_sql($data['vehicletype']),
-									'name_driver' => validasi_sql($data['name_driver']),
-									'id_driver' => validasi_sql($data['id_driver']),
-									'stock' => validasi_sql($newgenerated['stock']),
-									'quantity_product_pallet'  => validasi_sql($newgenerated['quantity_product_pallet']),
-									'quantity_pallet' => validasi_sql($newgenerated['quantity_pallet']),
-									'damaged_pallets' => validasi_sql($newgenerated['damaged_pallets']),
-									'damaged_stock'   => validasi_sql($newgenerated['damaged_stock']),
-									'good_pallets' => validasi_sql($newgenerated['good_pallets']),
-									'good_stock' => validasi_sql($newgenerated['good_stock']),
-									'type_movements' => validasi_sql($newgenerated['type_movements']),
-									'arrival_time' => validasi_sql($data['arrival_time']),
-									'maneuver_start' => validasi_sql($data['maneuver_start']),
-									'id_type_movement' => validasi_sql($newgenerated['id_type_movement']),
-									'type_movements' => validasi_sql($newgenerated['type_movements']),
-									'movement_date' => validasi_sql($newgenerated['movement_date']),
-									'id_position' => validasi_sql($newgenerated['id_position']),
-									'row_location' => validasi_sql($newgenerated['row_location']),
-									'column_location' => validasi_sql($newgenerated['column_location']),
-									'rack_number' => validasi_sql($newgenerated['rack_number']),
-									'level' => validasi_sql($newgenerated['level']),
-									'movement_created_by' => validasi_sql($newgenerated['movement_created_by']),
-									'expiration_date' => validasi_sql($newgenerated['expiration_date']),
-									'maneuver_end' => validasi_sql($data['maneuver_end']),
-									'departure_time' =>validasi_sql($data['departure_time']),
-									'note' => validasi_sql($newgenerated['note']),
-									'status' => validasi_sql($newgenerated['status']),
-									'created_by' => validasi_sql($data['created_by']),
-								    //'identification_number' => $data['identification_number']	
-				                );
-
-
-								   /* echo 'Valor de id_main: ' . $insert['id_main'] . "\n";
-								    echo 'Valor de id_movement: ' . $insert['id_movement'] . "\n";
-								    echo 'Valor de id_supplier: ' . $insert['id_supplier'] . "\n";
-									echo 'Valor de nama_supplier: ' . $insert['nama_supplier'] . "\n";
-									echo 'Valor de id_product: ' . $insert['id_product'] . "\n";
-									echo 'Valor de product_name: ' . $insert['product_name'] . "\n";
-									echo 'Valor de container_number ' . $insert['container_number'] . "\n";
-									echo 'Valor de container_type: ' . $insert['container_type'] . "\n";
-									echo 'Valor de id_container: ' . $insert['id_container'] . "\n";
-									echo 'Valor de id_transport: ' . $insert['id_transport'] . "\n";
-									echo 'Valor de platenumber: ' . $insert['platenumber'] . "\n";
-									echo 'Valor de vehicletype: ' . $insert['vehicletype'] . "\n";*/
-
-								$this->ADM->insert_arrivaltwo($insert);
-							}
-							$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
-
-					        redirect('website/arrival/view2');
-						}
-						 
 						// Actualizar los datos generales en todos los registros con el mismo identification_number
 						
 						
@@ -3232,7 +3121,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 						$this->db->update('arrivaltwo', $general_update); // Cambiar de update a insertar para prueba
 
 						// Actualización de productos
-						/*$products_update = $this->input->post('products_update');
+						$products_update = $this->input->post('products_update');
 
 						if ($products_update) {
 							foreach ($products_update as $product) {
@@ -3245,6 +3134,8 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 									// Actualización de los productos
 									$product_update = array(
 										//'id_product' => validasi_sql($product['id_product']),
+										//'id_arrivaltwo' => validasi_sql($product['id_arrivaltwo']),
+										'id_movement' => validasi_sql($product['id_movement']),
 										'product_name' => validasi_sql($product['product_name']),
 										'id_platform' => validasi_sql($product['id_platform']),
 										'type_platform' => validasi_sql($product['type_platform']),
@@ -3253,8 +3144,9 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 										'quantity_pallet' => validasi_sql($product['quantity_pallet']),
 										'damaged_pallets' => validasi_sql($product['damaged_pallets']),
 										'damaged_stock' => validasi_sql($product['damaged_stock']),
-										'good_pallets' => validasi_sql($product['good_pallets']),
+										//'good_pallets' => validasi_sql($product['good_pallets']),
 										'good_stock' => validasi_sql($product['good_stock']),
+										'type_movements' => validasi_sql($product['type_movements']),
 										'expiration_date' => validasi_sql($product['expiration_date']),
 										'note' => validasi_sql($product['note']),
 										'status' => validasi_sql($product['status']),
@@ -3265,6 +3157,8 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 									// Actualiza el registro en la base de datos
 									$this->db->where('id_product', $product['id_product']);
 									$this->db->where('identification_number', $data['identification_number']);
+									$this->db->where('id_movement IS NOT NULL');
+									$this->db->where('id_arrivaltwo', $product['id_arrivaltwo']);
 									$this->db->update('arrivaltwo', $product_update);
 
 									// Verifica si la actualización fue exitosa
@@ -3280,97 +3174,8 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 							}
 						} else {
 							echo "No se recibieron productos.";
-						}*/
-						// Inserción de nuevos productos
-						//$new_products = $this->input->post('products_insert');
+						}
 						
-						/*echo '<pre>';
-						print_r($_POST);
-						echo '</pre>';
-
-						foreach ($new_products as $product) {
-							echo '<pre>';
-							print_r($product);
-							echo '</pre>';
-
-							// Continuar con la inserción...
-						}*/
-
-						/*if ($new_products) {
-							foreach ($new_products as $new_product) {
-								if (isset($new_product['product_name']) && !empty($new_product['product_name'])) {
-									// Ajustar los datos del producto específico
-									$insert = array(
-										//'identification_number' => validasi_sql($data['identification_number']),
-										'sale_order' => validasi_sql($data['sale_order']),
-										'id_supplier' => validasi_sql($data['id_supplier']),
-										// 'id_product' => validasi_sql($data['id_product']),
-										//'product_name' => $this->ADM->get_product_name($data['id_product'])->product_name,
-										'nama_supplier' => $this->ADM->get_nama_supplier($data['id_supplier'])->nama_supplier,
-										'id_product' => validasi_sql($new_product['id_product']),
-										'product_name' => $this->ADM->get_product_name($new_product['id_product'])->product_name,
-										'event_type' => validasi_sql($data['event_type']),
-										'id_container' => validasi_sql($data['id_container']),
-										'container_number' => validasi_sql($data['container_number']),
-										'container_type' => validasi_sql($data['container_type']),
-										'state' => validasi_sql($data['state']),
-										'id_origin' => validasi_sql($data['id_origin']),
-										'type_maneuver' => validasi_sql($data['type_maneuver']),
-										'id_maneuver' => validasi_sql($data['id_maneuver']),
-										'event_date' => validasi_sql($data['event_date']),
-										'id_platform' => validasi_sql($new_product['id_platform']),
-										'type_platform' => $this->ADM->get_type_platform($new_product['id_platform']),
-										// print_r($type_platform_data), // Verifica qué se está devolviendo aquí.
-										//'type_platform' => $this->ADM->get_type_platform($product['id_platform'])->type_platform,
-										'id_transport' => validasi_sql($data['id_transport']),
-										'platenumber' => validasi_sql($data['platenumber']),
-										'vehicletype' => validasi_sql($data['vehicletype']),
-										'name_driver' => validasi_sql($data['name_driver']),
-										'id_driver' => validasi_sql($data['id_driver']),
-										'stock' => validasi_sql($new_product['stock']),
-										'quantity_product_pallet' => validasi_sql($new_product['quantity_product_pallet']),
-										'quantity_pallet' => validasi_sql($new_product['quantity_pallet']),
-										'damaged_pallets' => validasi_sql($new_product['damaged_pallets']),
-										'damaged_stock' => validasi_sql($new_product['damaged_stock']),
-										'good_pallets' => validasi_sql($new_product['good_pallets']),
-										'good_stock' => validasi_sql($new_product['good_stock']),
-										'arrival_time' => validasi_sql($data['arrival_time']),
-										'maneuver_start' => validasi_sql($data['maneuver_start']),
-										'expiration_date' => validasi_sql($new_product['expiration_date']),
-										'maneuver_end' => validasi_sql($data['maneuver_end']),
-										'departure_time' => validasi_sql($data['departure_time']),
-										'note' => validasi_sql($new_product['note']),
-										'status' => validasi_sql($new_product['status']),
-										'created_by' => validasi_sql($data['created_by']),
-										'identification_number' => $data['identification_number']
-
-
-									);
-									// Imprimir el valor de id_supplier para depuración
-									echo 'Valor de id_supplier: ' . $insert['id_supplier'] . "\n";
-									echo 'Valor de nama_supplier: ' . $insert['nama_supplier'] . "\n";
-									echo 'Valor de id_product: ' . $insert['id_product'] . "\n";
-									echo 'Valor de product_name: ' . $insert['product_name'] . "\n";
-									echo 'Valor de container_number ' . $insert['container_number'] . "\n";
-									echo 'Valor de container_type: ' . $insert['container_type'] . "\n";
-									echo 'Valor de id_container: ' . $insert['id_container'] . "\n";
-									echo 'Valor de id_transport: ' . $insert['id_transport'] . "\n";
-									echo 'Valor de platenumber: ' . $insert['platenumber'] . "\n";
-									echo 'Valor de vehicletype: ' . $insert['vehicletype'] . "\n";
-									/*foreach ($products as $product) {
-										echo '<pre>';
-										print_r($product);
-										echo '</pre>';
-										
-										// Continuar con la inserción...
-									}*/
-									
-									// Insertar cada producto
-									/*$this->ADM->insert_arrivaltwo($insert);
-								}
-							}
-						}*/
-
 						// Después de que todas las actualizaciones hayan sido procesadas
 						$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
 
@@ -3392,7 +3197,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 
 					
 					// Procesar los productos asociados al arribo
-					$data['productss'] = $this->ADM->get_all_products_by_identification($arrivaltwo->identification_number);
+					$data['productss'] = $this->ADM->get_all_products_by_identificationtwo($arrivaltwo->identification_number);
 
 					//Generar subregistros basados en quantity_pallet
 					$generatedProducts = [];
@@ -3507,7 +3312,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 							// Continuar con la inserción...
 						}*/
 
-						if($products){
+						if($products ){
 							foreach ($products as $newgenerated){
 								$insert = array(
 									'id_main' => validasi_sql($newgenerated['id_main']),
@@ -3563,11 +3368,14 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 									'note' => validasi_sql($newgenerated['note']),
 									'status' => validasi_sql($newgenerated['status']),
 									'created_by' => validasi_sql($data['created_by']),
+									
 								    //'identification_number' => $data['identification_number']	
 				                );
 
 
 								$this->ADM->insert_arrivaltwo($insert);
+								// Actualizar el campo updated_by en arrival para el mismo id_main
+							
 							}
 							$this->session->set_flashdata('success', 'Arribo y productos actualizados correctamente.');
 
@@ -3642,6 +3450,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					// Actualizar datos generales del arribo
 					$products = $this->input->post('products_update');
 					$products['id_main']           = $this->input->post('id_main') ?: $arrival->id_main;
+					$products['id_movement']       = $this->input->post('id_movement') ?: $arrival->id_movement;
 					$products['id_arrival']        = $this->input->post('id_arrival') ?: $arrival->id_arrrival;
 					$data['identification_number'] = $this->input->post('identification_number') ?: $arrival->identification_number;
 					$data['sale_order']            = $this->input->post('sale_order') ?: $arrival->sale_order;

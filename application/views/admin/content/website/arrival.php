@@ -223,9 +223,16 @@
                                                             </td>
                                                             <?php if ($admin->admin_level_kode == 1) { ?>
                                                                 <td class="text-center action">
-                                                                    <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $row->id_main; ?>">
+                                                                   <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $row->id_main; ?>">
+                                                                        <i class="icon wb-pencil"></i>
+                                                                    </a>-->
+                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
+                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar2/'.$row->id_main); ?>"
+                                                                        <?php echo ($disable_edit[$row->id_main] ?? false) ? 'onclick="return false;"' : ''; ?>>
                                                                         <i class="icon wb-pencil"></i>
                                                                     </a>
+
+
                                                                     <a class="text-danger" href="javascript:;" data-id="<?php echo $row->id_main; ?>" data-toggle="modal" data-target="#modal-konfirmasi" title="<?php echo $row->identification_number; ?>">
                                                                         <i class="icon wb-trash"></i>
                                                                     </a>
@@ -1472,8 +1479,8 @@
                                                             <?php $index = 1; ?>
                                                             <!-- var_dump($generated_products) ?>-->
 
-                                                            <?php if (isset($generated_products) && is_array($generated_products)) : ?>
-                                                                <?php foreach ($generated_products as $product) : ?>
+                                                            <?php if (isset($productss) && is_array($productss)) : ?>
+                                                                <?php foreach ($productss as $product) : ?>
                                                                     <tr>
 
                                                                         <td>
@@ -1483,6 +1490,7 @@
                                                                                 <?php endif; ?>
                                                                             </div>
                                                                         </td>
+                                                                        <input type="hidden" name="products_update[<?php echo $index; ?>][id_arrivaltwo]" id="id_arrivaltwo_<?php echo $index; ?>" value="<?= $product->id_arrivaltwo; ?>">
                                                                         <input type="hidden" name="products_update[<?php echo $index; ?>][id_main]" id="id_main_<?php echo $index; ?>" value="<?= $product->id_main; ?>" />
                                                                         <input type="hidden" name="products_update[<?php echo $index; ?>][id_arrival]" id="id_arrival_<?php echo $index; ?>" value="<?= $product->id_arrival; ?>" />
                                                                         <td>
@@ -1648,7 +1656,7 @@
                                 <div class="col-md-12 mt-5 ">
                                     <div class='button center mt-2'>
                                         <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
-                                        <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
+                                        <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view2'" />
                                     </div>
                                 </div>
                             </form>

@@ -276,6 +276,7 @@
 												</a>
 											</li>
 										<?php } ?>
+										
 										<?php if ($admin->admin_level_kode === '1' || $admin->admin_level_kode === '2') { ?>
 											<li class='site-menu-item'>
 												<a href='<?php echo base_url(); ?>website/arrival/view2' class='animsition-link'>
@@ -287,6 +288,7 @@
 												</a>
 											</li>
 										<?php } ?>
+
 									</ul>
 								</li>
 
