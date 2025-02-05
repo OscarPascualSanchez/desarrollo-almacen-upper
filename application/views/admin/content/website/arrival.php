@@ -223,9 +223,16 @@
                                                             </td>
                                                             <?php if ($admin->admin_level_kode == 1) { ?>
                                                                 <td class="text-center action">
-                                                                    <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/edit/<?php echo $row->id_main; ?>">
+                                                                   <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $row->id_main; ?>">
+                                                                        <i class="icon wb-pencil"></i>
+                                                                    </a>-->
+                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
+                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar2/'.$row->id_main); ?>"
+                                                                        <?php echo ($disable_edit[$row->id_main] ?? false) ? 'onclick="return false;"' : ''; ?>>
                                                                         <i class="icon wb-pencil"></i>
                                                                     </a>
+
+
                                                                     <a class="text-danger" href="javascript:;" data-id="<?php echo $row->id_main; ?>" data-toggle="modal" data-target="#modal-konfirmasi" title="<?php echo $row->identification_number; ?>">
                                                                         <i class="icon wb-trash"></i>
                                                                     </a>
@@ -425,9 +432,9 @@
                                             <tbody>
                                                 <?php
                                                 $i    = $page + 1;
-                                                $like_arrival[$cari]            = $q;
+                                                $like_arrivaltwo[$cari]            = $q;
                                                 if ($jml_data > 0) {
-                                                    foreach ($this->ADM->grid_all_arrivaltwo2('', 'id_arrivaltwo', 'ASC', $batas, $page, '', $like_arrivaL) as $row) {
+                                                    foreach ($this->ADM->grid_all_arrivaltwo2('', 'id_arrivaltwo', 'ASC', $batas, $page, '', $like_arrivaltwo) as $row) {
                                                 ?>
                                                         <tr>
                                                             <td>
@@ -559,7 +566,7 @@
                                                 <div class='pagination-right'>
                                                     <ul class="pagination">
                                                         <?php if ($jml_halaman > 1) {
-                                                            echo pages($halaman, $jml_halaman, 'website/arrival/view', $id = "");
+                                                            echo pages($halaman, $jml_halaman, 'website/arrival/view2', $id = "");
                                                         } ?>
                                                     </ul>
                                                 </div>
@@ -1472,6 +1479,847 @@
                                                             <?php $index = 1; ?>
                                                             <!-- var_dump($generated_products) ?>-->
 
+                                                            <?php if (isset($productss) && is_array($productss)) : ?>
+                                                                <?php foreach ($productss as $product) : ?>
+                                                                    <tr>
+
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <?php if (!is_null($product->id_movement)) : ?>
+                                                                                    <input class="form-control input-sm" type="text" name="products_update[<?php echo $index; ?>][id_movement]" id="id_movement_<?php echo $index; ?>" value="<?= $product->id_movement ?>" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
+                                                                                <?php endif; ?>
+                                                                            </div>
+                                                                        </td>
+                                                                        <input type="hidden" name="products_update[<?php echo $index; ?>][id_arrivaltwo]" id="id_arrivaltwo_<?php echo $index; ?>" value="<?= $product->id_arrivaltwo; ?>">
+                                                                        <input type="hidden" name="products_update[<?php echo $index; ?>][id_main]" id="id_main_<?php echo $index; ?>" value="<?= $product->id_main; ?>" />
+                                                                        <input type="hidden" name="products_update[<?php echo $index; ?>][id_arrival]" id="id_arrival_<?php echo $index; ?>" value="<?= $product->id_arrival; ?>" />
+                                                                        <td>
+                                                                            <!-- Campo oculto para id_product -->
+                                                                            <input type="hidden" name="products_update[<?php echo $index; ?>][id_product]" value="<?= $product->id_product ?>" />
+
+                                                                            <div class="form-group form-material">
+                                                                                <!-- Select para seleccionar el producto -->
+                                                                                <select name="products_update[<?php echo $index; ?>][id_product]"
+                                                                                    class="form-control"
+                                                                                    style="padding: 5px; font-size: 12px; text-align: center; width: 200px;"
+                                                                                    onchange="document.getElementById('product_name_<?php echo $index; ?>').value = this.options[this.selectedIndex].text">
+                                                                                    <option value="">Seleccione un producto</option>
+                                                                                    <?php foreach ($products as $product_na) : ?>
+                                                                                        <option value="<?= $product_na->id_product ?>"
+                                                                                            <?php echo ($product->id_product == $product_na->id_product) ? 'selected' : ''; ?>>
+                                                                                            <?= $product_na->product_name ?>
+                                                                                        </option>
+                                                                                    <?php endforeach; ?>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <!-- Campo oculto para enviar el nombre del producto -->
+                                                                            <input type="hidden"
+                                                                                id="product_name_<?php echo $index; ?>"
+                                                                                name="products_update[<?php echo $index; ?>][product_name]"
+                                                                                value="<?= $product->product_name ?>" />
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            <input type="hidden" name="products_update[<?php echo $index; ?>][id_platform]" value="<?= $product->id_platform ?>" />
+                                                                            <div class="form-group">
+                                                                                <select name="products_update[<?php echo $index; ?>][id_platform]" class="form-control" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" onchange="document.getElementById('type_platform_<?php echo $index; ?>').value = this.options[this.selectedIndex].text">>
+                                                                                    <option value="">Seleccione un tipo de pallet</option>
+                                                                                    <?php foreach ($platforms as $platform) : ?>
+                                                                                        <option value="<?= $platform->id_platform ?>" <?php echo ($product->id_platform == $platform->id_platform) ? 'selected' : ''; ?>><?= $platform->type_platform ?>
+                                                                                        </option>
+                                                                                    <?php endforeach; ?>
+                                                                                </select>
+                                                                            </div>
+                                                                            <!-- Campo oculto para enviar el nombre del pallet -->
+                                                                            <input type="hidden"
+                                                                                id="type_platform_<?php echo $index; ?>"
+                                                                                name="products_update[<?php echo $index; ?>][type_platform]"
+                                                                                value="<?= $product->type_platform ?>" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][stock]" value="<?php echo $product->stock; ?>" placeholder="Introduce el stock" id="stock_<?php echo $index; ?>" required readonly />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products_update[<?php echo $index; ?>][quantity_product_pallet]" value="<?php echo $product->quantity_product_pallet; ?>" placeholder="Escribe la cantidad de producto por pallets" id="quantity_product_pallet_<?php echo $index; ?>" oninput="calculateStock(<?php echo $index; ?>)" required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products_update[<?php echo $index; ?>][quantity_pallet]" value="<?php echo $product->quantity_pallet; ?>" placeholder="Escribe la cantidad de pallets" id="quantity_pallet_<?php echo $index; ?>" oninput="calculateStock(<?php echo $index; ?>)" required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products_update[<?php echo $index; ?>][damaged_pallets]" value="<?php echo $product->damaged_pallets; ?>" placeholder="Escribe la cantidad de pallets dañados" id="damaged_pallets_<?php echo $index; ?>" oninput="updateQuantityPallet(<?php echo $index; ?>)" required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products_update[<?php echo $index; ?>][damaged_stock]" value="<?php echo $product->damaged_stock; ?>" placeholder="Escribe el stock dañado" id="damaged_stock_<?php echo $index; ?>" oninput="actualizarStockOk(<?php echo $index; ?>); updateDamagedStock(<?php echo $index; ?>)" required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <!-- <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 180px;" name="products_update[<?php echo $index; ?>][good_pallets]" value="<?php echo $product->good_pallets; ?>" placeholder="Escribe la cantidad de pallets OK" id="good_pallets_<?php echo $index; ?>" readonly required />
+                                                                            </div>
+                                                                        </td>-->
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][good_stock]" value="<?php echo $product->good_stock; ?>" placeholder="Escribe el stock OK" id="good_stock_<?php echo $index; ?>" readonly required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="date" class="form-control input-sm" name="products_update[<?php echo $index; ?>][expiration_date]" value="<?php echo $product->expiration_date; ?>" placeholder="Caducidad" required />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <input type="text" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 130px;" name="products_update[<?php echo $index; ?>][note]" value="<?php echo $product->note; ?>" placeholder="Nota" />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group form-material">
+                                                                                <select name="products_update[<?php echo $index; ?>][status]" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" onchange="checkStatus(this)">
+                                                                                    <?php
+                                                                                    $statuss = array("Activo", "Suspendido", "Deshabilitado");
+                                                                                    foreach ($statuss as $status) {
+                                                                                        echo "<option value='$status' " . ($product->status == $status ? 'selected' : '') . ">$status</option>";
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                       <!-- <td style="display: flex; gap: 5px;">
+                                                                            <button type="button" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;" onclick="addProductRow()">Agregar Producto</button>
+                                                                            <button type="button" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="removeProductRow(this)">Eliminar</button>
+                                                                        </td>-->
+                                                                    </tr>
+                                                                    <?php $index++; ?>
+                                                                <?php endforeach; ?>
+                                                            <?php else : ?>
+                                                                <tr>
+                                                                    <td colspan="14">No se encontraron productos.</td>
+                                                                </tr>
+                                                            <?php endif; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5>Datos adicionales</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-3 mt-2">
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Creado por</label>
+                                                            <input type="text" value="<?php echo $created_by; ?>" class="form-control input-sm" id="created_by" name="created_by" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-2">
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputDate">Fecha de creación</label>
+                                                            <input type="datetime" value="<?php echo $created_date; ?>" class="form-control input-sm" id="created_date" name="created_date" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-2">
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Modificado por</label>
+                                                            <input type="text" value="<?php echo $this->session->userdata('admin_nama') ?>" class="form-control input-sm" id="updated_by" name="updated_by" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-2">
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Fecha de última modificación</label>
+                                                            <input type="text" value="<?php echo $updated_date; ?>" class="form-control input-sm" id="updated_date" name="updated_date" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 mt-5 ">
+                                    <div class='button center mt-2'>
+                                        <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
+                                        <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view2'" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <a href="<?php echo site_url(); ?>website/arrival/view">
+            <button class="site-action btn-raised btn btn-sm btn-floating blue" type="button">
+                <i class="icon wb-eye" aria-hidden="true"></i>
+            </button>
+        </a>
+    </div>
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .table {
+            table-layout: auto;
+            width: 100%;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px;
+            text-align: center;
+            /* Centra el texto en las celdas */
+        }
+
+        .table th:nth-child(1) {
+            width: 30%;
+        }
+
+        .table th:nth-child(2) {
+            width: 25%;
+        }
+
+        /* Ajusta los anchos según sea necesario */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+
+        .select.form-control.id_product {
+            overflow-x: auto;
+        }
+    </style>
+    <script>
+        let index = <?php echo $index; ?>; // Empieza con el valor del último índice utilizado
+
+        // Función para agregar una nueva fila de producto
+        function addProductRow() {
+            console.log('addProductRow function called'); // Verifica si la función se está llamando
+            const supplierId = document.getElementById('id_supplier').value; // Asegúrate de tener el supplier_id disponible
+            const tableBody = document.querySelector('#editProductsTable tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+             <td>
+                <div class="form-group form-material">
+                    <input class="form-control input-sm" type="text" name="products_insert[${index}][id_movement]" id="id_movement_${index}" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
+                </div>                                                         
+            </td>  
+            <td>
+            <input type="hidden" name="products_insert[${index}][id_product]" id="id_product_${index}" value="<?= $product->id_product ?>" />
+
+            <div class="form-group form-material">
+            <!-- Select para seleccionar el producto -->
+                <select name="products_insert[${index}][id_product]" id="id_product_${index}"
+                    class="form-control"
+                    style="padding: 5px; font-size: 12px; text-align: center; width: 200px;"
+                    onchange="document.getElementById('product_name_${index}').value = this.options[this.selectedIndex].text">
+                       <option value="">Seleccione un producto</option>
+                            <?php foreach ($products as $product_na) : ?>
+                                <option value="<?= $product_na->id_product ?>"><?= $product_na->product_name ?></option>
+                            <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Campo oculto para enviar el nombre del producto -->
+                <input type="hidden"
+                    id="product_name_${index}"
+                    name="products_insert[${index}][product_name]"
+                    value="<?= $product->product_name ?>" />      
+        </td>
+        <td>
+            <input type="hidden" name="products_insert[${index}][id_platform]" id="id_platform_${index}" value="" />
+                <div class="form-group">
+                    <select name="products_insert[${index}][id_platform]" id="id_platform_${index}" class="form-control" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;"  onchange="document.getElementById('type_platform_${index}').value = this.options[this.selectedIndex].text">>
+                        <option value="">Seleccione un tipo de pallet</option>
+                            <?php foreach ($platforms as $platform) : ?>
+                                <option value="<?= $platform->id_platform ?>"><?= $platform->type_platform ?></option>
+                            <?php endforeach; ?>
+                    </select>
+                </div>
+            <!-- Campo oculto para enviar el nombre del pallet -->
+            <input type="hidden"
+                id="type_platform_${index}"
+                name="products_insert[${index}][type_platform]"
+                value="<?= $product->type_platform ?>" />
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][stock]" id="stock_${index}" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" placeholder="Introduce el stock" required />
+            </div>    
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][quantity_product_pallet]" id="quantity_product_pallet_${index}" oninput="calculateStock(${index})" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" placeholder="Escribe la cantidad de producto por pallets" required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][quantity_pallet]" id="quantity_pallet_${index}" oninput="calculateStock(${index})" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" placeholder="Escribe la cantidad de pallets" readonly required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][damaged_pallets]" id="damaged_pallets_${index}" oninput="updateQuantityPallet(${index})" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" placeholder="Escribe la cantidad de pallets dañados" required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][damaged_stock]" id="damaged_stock_${index}" oninput="actualizarStockOk(${index}); updateDamagedStock(${index})" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" placeholder="Escribe el stock dañado" required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][good_pallets]" id="good_pallets_${index}" style="padding: 5px; font-size: 12px; text-align: center; width: 180px;" placeholder="Escribe la cantidad de pallets OK" readonly required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="number" class="form-control input-sm" name="products_insert[${index}][good_stock]" id="good_stock_${index}" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" placeholder="Escribe el stock OK" readonly required />
+            </div>
+        </td>
+       
+        <td>
+            <div class="form-group form-material">
+                <input type="date" class="form-control input-sm" name="products_insert[${index}][expiration_date]" required />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <input type="text" class="form-control input-sm" name="products_insert[${index}][note]" style="padding: 5px; font-size: 12px; text-align: center; width: 130px;" placeholder="Nota" />
+            </div>
+        </td>
+        <td>
+            <div class="form-group form-material">
+                <select name="products_insert[${index}][status]" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;">
+                    <option value="Activo">Activo</option>
+                    <option value="Suspendido">Suspendido</option>
+                    <option value="Deshabilitado">Deshabilitado</option>
+                </select>
+            </div>
+        </td>
+        <td style="display: flex; gap: 5px;">
+            <button type="button" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;" onclick="addProductRow()">Agregar Producto</button>
+            <button type="button" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="removeProductRow(this)">Eliminar</button>
+        </td>
+    `;
+            tableBody.appendChild(newRow);
+
+            loadProductsForRows(index, supplierId);
+            index++; // Incrementa el índice para la siguiente fila
+        }
+
+        // Función para eliminar una fila de producto
+        function removeProductRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Filtrar productos al cargar la página para las filas existentes
+            var supplierId = $('#id_supplier').val();
+
+            if (supplierId) {
+                $('select[name^="products_update"]').each(function(index, element) {
+                    loadProductsForRow(index, supplierId);
+                });
+            }
+
+            // Evento para añadir una nueva fila con el botón
+            $(document).on('click', '.add-row-button', function() {
+                addProductRow(); // Llamar a la función para agregar una nueva fila
+            });
+        });
+
+        function loadProductsForRow(index, supplierId) {
+            $.ajax({
+                url: '<?= base_url("Website/get_products_by_supplier") ?>',
+                type: 'POST',
+                data: {
+                    id_supplier: supplierId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var select = $('select[name="products_update[' + index + '][id_product]"]');
+                    select.empty(); // Limpia las opciones actuales
+
+                    // Agrega la opción por defecto
+                    select.append('<option value="">Seleccione un producto</option>');
+
+                    if (data && data.length > 0) {
+                        $.each(data, function(key, value) {
+                            // Añade las opciones filtradas
+                            select.append('<option value="' + value.id_product + '">' + value.product_name + '</option>');
+                        });
+                    } else {
+                        select.append('<option value="">No hay productos disponibles</option>');
+                    }
+
+                    // Mantén seleccionado el producto que ya estaba guardado
+                    var selectedProductId = $('input[name="products_update[' + index + '][id_product]"]').val();
+                    select.val(selectedProductId);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al cargar los productos:', error);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Filtrar productos al cargar la página para las filas existentes
+            var supplierId = $('#id_supplier').val();
+
+            if (supplierId) {
+                $('select[name^="products_update"]').each(function(index, element) {
+                    loadProductsForRow(index, supplierId);
+                });
+            }
+
+            // Evento para añadir una nueva fila con el botón
+            $(document).on('click', '.add-row-button', function() {
+                addProductRow(); // Llamar a la función para agregar una nueva fila
+            });
+        });
+
+        function loadProductsForRows(index, supplierId) {
+            $.ajax({
+                url: '<?= base_url("Website/get_products_by_supplier") ?>',
+                type: 'POST',
+                data: {
+                    id_supplier: supplierId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var select = $('select[name="products_insert[' + index + '][id_product]"]');
+                    select.empty(); // Limpia las opciones actuales
+
+                    // Agrega la opción por defecto
+                    select.append('<option value="">Seleccione un producto</option>');
+
+                    if (data && data.length > 0) {
+                        $.each(data, function(key, value) {
+                            // Añade las opciones filtradas
+                            select.append('<option value="' + value.id_product + '">' + value.product_name + '</option>');
+                        });
+                    } else {
+                        select.append('<option value="">No hay productos disponibles</option>');
+                    }
+
+                    // Mantén seleccionado el producto que ya estaba guardado
+                    // var selectedProductId = $('input[name="products_update[' + index + '][id_product]"]').val();
+                    //select.val(selectedProductId);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al cargar los productos:', error);
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        function convertToSelect(input) {
+            const select = document.createElement('select');
+            select.name = input.name;
+            select.className = input.className;
+            select.onchange = function() {
+                checkStatus(this);
+            };
+
+            const statusOptions = ["Activo", "Suspendido", "Deshabilitado"];
+            statusOptions.forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.text = status;
+                if (status === input.value) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            input.parentNode.replaceChild(select, input);
+            checkStatus(select);
+        }
+    </script>
+
+    <script>
+        document.getElementById('container_number').addEventListener('change', function() {
+            var containerNumber = this.value;
+            if (containerNumber) {
+                fetch('<?= site_url('Website/get_container_type_by_number/') ?>' + containerNumber)
+                    .then(response => response.json())
+                    .then(data => {
+                        var containerTypeSelect = document.getElementById('container_type');
+                        containerTypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                        if (data.container_type) {
+                            var option = document.createElement('option');
+                            option.value = data.container_type;
+                            option.text = data.container_type;
+                            containerTypeSelect.add(option);
+                        }
+                    });
+            } else {
+                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
+                document.getElementById('container_type').innerHTML = '<option value="">Seleccione un tipo de contenedor</option>';
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('platenumber').addEventListener('change', function() {
+            var platenumber = this.value;
+            if (platenumber) {
+                fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
+                    .then(response => response.json())
+                    .then(data => {
+                        var vehicletypeSelect = document.getElementById('vehicletype');
+                        vehicletypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                        if (data.vehicletype) {
+                            var option = document.createElement('option');
+                            option.value = data.vehicletype;
+                            option.text = data.vehicletype;
+                            vehicletypeSelect.add(option);
+                        }
+                    });
+            } else {
+                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
+                document.getElementById('vehicletype').innerHTML = '<option value="">Seleccione un tipo de unidad</option>';
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Delegación de eventos para manejar cálculos automáticos en filas dinámicas
+            $(document).on('input', '[id^=stock_], [id^=quantity_product_pallet_], [id^=damaged_pallets_], [id^=damaged_stock_]', function() {
+                var index = $(this).attr('id').match(/\d+/); // Extrae el índice del ID del campo
+                calculateStock(index);
+            });
+
+            $('#addRowButton').on('click', function() {
+                var newRowIndex = $('input[id^=stock_]').length; // Calcula el índice de la nueva fila
+                // Añade los eventos de actualización a la nueva fila
+                calculateStock(newRowIndex);
+            });
+        });
+
+        /* function updateQuantityProductByPallet(index) {
+             const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
+             const quantityProductPallet = parseFloat(document.getElementById(`quantity_product_pallet_${index}`).value) || 0;
+
+             // Verificar si quantityProductPallet es mayor que el stockInicial
+             if (quantityProductPallet > stockInicial) {
+                 // Si es mayor, puedes decidir si:
+                 // 1. Mostrar un mensaje de error o advertencia
+                 alert(`La cantidad por pallet no puede ser mayor que el stock disponible (${stockInicial}).`);
+
+                 // 2. O asignar automáticamente el stock como cantidad máxima permitida
+                 document.getElementById(`quantity_product_pallet_${index}`).value = stockInicial;
+             }
+         }*/
+
+        function updateQuantityPallet(index) {
+            const damagedPallets = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
+            const quantityPallet = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
+
+            if (damagedPallets > quantityPallet) {
+                alert(`La cantidad de pallets dañados no puede ser mayor que el número de palllets (${quantityPallet}).`);
+                document.getElementById(`damaged_pallets_${index}`).value = quantityPallet;
+            }
+        }
+        // ******************************************************************************************************************************
+        function updateDamagedStock(index) {
+            // Obtener valores
+            const damagedStock = parseFloat(document.getElementById(`damaged_stock_${index}`).value) || 0;
+            const damagedPallets = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
+            const quantityProductPallet = parseFloat(document.getElementById(`quantity_product_pallet_${index}`).value) || 0;
+
+            // Calcular resultado permitido
+            const resul = damagedPallets * quantityProductPallet;
+            const resulFormatted = parseFloat(resul.toFixed(2));
+
+            // Si el valor introducido es mayor, se muestra alerta y se corrige
+            if (damagedStock > resulFormatted) {
+                alert(`La cantidad de stock dañado no puede ser mayor a la multiplicación de cantidad de pallets * cantidad de producto por pallet (${resulFormatted}).`);
+                document.getElementById(`damaged_stock_${index}`).value = resulFormatted;
+            }
+        }
+        // ********************************************************************************************************************************* 
+        function calculateStock(index) {
+            const quantityPallet = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
+            const quantityProductPallet = parseFloat(document.getElementById(`quantity_product_pallet_${index}`).value) || 0;
+
+            const stockInicial = quantityPallet * quantityProductPallet;
+            const stockInicialFormatted = stockInicial.toFixed(2);
+            document.getElementById(`stock_${index}`).value = stockInicialFormatted;
+
+            //actualizarPalletsOk(index);
+            actualizarStockOk(index);
+        }
+
+        /* function actualizarPalletsOk(index) {
+             const cantidadInicial = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
+             const palletsDañados = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
+             const palletsOk = cantidadInicial - palletsDañados;
+             document.getElementById(`good_pallets_${index}`).value = palletsOk;
+         }*/
+
+        function actualizarStockOk(index) {
+            const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
+            const stockDañado = parseFloat(document.getElementById(`damaged_stock_${index}`).value) || 0;
+            const stockOk = stockInicial - stockDañado;
+            document.getElementById(`good_stock_${index}`).value = stockOk;
+        }
+    </script>
+    <!--<script>
+         function updateAvailablePallet(index) {
+            // Obtenemos los valores de los inputs 1 y 2
+            var stockInsert = document.getElementById(`stock_${index}`).value;
+            //var quantityPalletInsert = document.getElementById(`quantity_pallet_${index}`).value;
+
+            // Actualiza el valor del input available_pallets concatenando los valores
+            document.getElementById(`available_pallets_${index}`).value = `Stock: ${stockInsert}`;
+        }
+    </script>-->
+    <!-- < <script>
+        // Función que revisa periódicamente si ha cambiado el valor
+        function monitorInputs(index) {
+        setInterval(function() {
+        // Recuperar los valores de los inputs
+        var stockInsert = document.getElementById(`stock_${index}`).value;
+        var quantityPalletInsert = document.getElementById(`quantity_pallet_${index}`).value;
+
+        document.getElementById(`available_pallets_${index}`).value = `Stock: ${stockInsert}, Pallets: ${quantityPalletInsert}`;
+        }, 1000); // Intervalo de 500ms para detectar cambios
+        }
+
+
+        // Iniciar la monitorización al cargar la página
+        window.onload = monitorInputs;
+        </script>-->
+
+    <!-- ================================================== END EDIT ================================================== -->
+
+
+
+    <!-- ================================================== EDITAR2 ================================================== -->
+    <?php } elseif ($action == 'editar2') { ?>
+    <div class="page">
+        <div class="page-title orange">
+            <h3>
+                <?php echo $breadcrumb; ?>
+            </h3>
+            <p>Información sobre el
+                <?php echo $breadcrumb; ?>
+            </p>
+        </div>
+        <script>
+            function updateDateTime() {
+                const now = new Date();
+                const formattedDateTime = now.getFullYear() + '-' +
+                    ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                    ('0' + now.getDate()).slice(-2) + ' ' +
+                    ('0' + now.getHours()).slice(-2) + ':' +
+                    ('0' + now.getMinutes()).slice(-2) + ':' +
+                    ('0' + now.getSeconds()).slice(-2);
+                document.getElementById('updated_date').value = formattedDateTime;
+            }
+
+            // Actualiza la fecha y hora automáticamente cuando la página se carga
+            window.onload = updateDateTime;
+        </script>
+
+        <div class="page-content container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel rounded-0">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Editar <?php echo $breadcrumb; ?></h5>
+                        </div>
+                        <div class="panel-body container-fluid">
+                            <form action="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $id_arrivaltwo; ?>" method="post" id="exampleStandardForm" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-12 mt-2">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5>Datos generales de arribo</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4 mt-2">
+                                                        <input type="hidden" name="id_arrivaltwo" value="<?php echo $id_arrivaltwo; ?>" />
+
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">N.Identificación de evento</label>
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $identification_number; ?>" id="identification_number" name="identification_number" required />
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Pedido</label>
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $sale_order; ?>" id="sale_order" name="sale_order" placeholder="Escribe el pedido" required />
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Cliente</label>
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $nama_supplier; ?>" id="nama_supplier" readonly />
+                                                            <input type="hidden" name="id_supplier" value="<?php echo $id_supplier; ?>" id="id_supplier" />
+                                                            <input type="hidden" name="nama_supplier" value="<?php echo $nama_supplier; ?>" id="nama_supplier" />
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputText">Tipo de evento</label>
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $event_type; ?>" id="event_type" name="event_type" placeholder="Introdu el tipo de evento" required />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="container_number">N.Identificación del contenedor</label>
+                                                            <select name="container_number" id="container_number" class="form-control">
+                                                                <option value="">Seleccione el N.Identificador del contenedor</option>
+                                                                <?php foreach ($containers as $container) : ?>
+                                                                    <option value="<?= $container->container_number ?>" <?php echo ($container->container_number == $container_number) ? 'selected' : ''; ?>><?= $container->container_number ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="container_type">Tipo de Contenedor</label>
+                                                            <select name="container_type" id="container_type" class="form-control">
+                                                                <option value="<?= $container_type ?>" selected><?= $container_type ?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-2">
+                                                        <div class="form-group">
+                                                            <label for="id_origin">Origen</label>
+                                                            <select name="id_origin" id="id_origin" class="form-control">
+                                                                <option value="">Seleccione el Origen</option>
+                                                                <?php foreach ($origins as $origin) : ?>
+                                                                    <option value="<?= $origin->id_origin ?>" <?php echo ($origin->id_origin == $id_origin) ? 'selected' : ''; ?>><?= $origin->state ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="id_maneuver">Tipo de maniobra</label>
+                                                            <select name="id_maneuver" id="id_maneuver" class="form-control">
+                                                                <option value="">Seleccione el Origen</option>
+                                                                <?php foreach ($maneuvers as $maneuver) : ?>
+                                                                    <option value="<?= $maneuver->id_maneuver ?>" <?php echo ($maneuver->id_maneuver == $id_maneuver) ? 'selected' : ''; ?>><?= $maneuver->type_maneuver ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputDate">Fecha de evento</label>
+                                                            <input type="date" class="form-control input-sm" value="<?php echo $event_date; ?>" id="event_date" name="event_date" required />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="platenumber">Número de placa</label>
+                                                            <select name="platenumber" id="platenumber" class="form-control">
+                                                                <option value="">Seleccione el número de placa</option>
+                                                                <?php foreach ($transports as $transport) : ?>
+                                                                    <option value="<?= $transport->platenumber ?>" <?php echo ($transport->platenumber == $platenumber) ? 'selected' : ''; ?>><?= $transport->platenumber ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="vehicletype">Tipo de Unidad / Transporte</label>
+                                                            <select name="vehicletype" id="vehicletype" class="form-control">
+                                                                <option value="<?= $vehicletype ?>" selected><?= $vehicletype ?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt2">
+                                                        <div class="form-group">
+                                                            <label for="id_driver">Conductor</label>
+                                                            <select name="id_driver" id="id_driver" class="form-control">
+                                                                <option value="">Seleccione un tipo de pallet</option>
+                                                                <?php foreach ($drivers as $driver) : ?>
+                                                                    <option value="<?= $driver->id_driver ?>" <?php echo ($driver->id_driver == $id_driver) ? 'selected' : ''; ?>><?= $driver->name_driver ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputTime">Hora de llegada</label>
+                                                            <input type="time" value="<?php echo $arrival_time; ?>" class="form-control input-sm" id="arrival_time" name="arrival_time" required>
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputTime">Inicio de maniobra</label>
+                                                            <input type="time" class="form-control input-sm" value="<?php echo $maneuver_start; ?>" id="maneuver_start" name="maneuver_start" required />
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputTime">Fin de maniobra</label>
+                                                            <input type="time" class="form-control input-sm" value="<?php echo $maneuver_end; ?>" id="maneuver_end" name="maneuver_end" required />
+                                                        </div>
+                                                        <div class="form-group form-material">
+                                                            <label class="control-label" for="inputTime">Hora de salida</label>
+                                                            <input type="time" class="form-control input-sm" value="<?php echo $departure_time; ?>" id="departure_time" name="departure_time" required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h5>Datos del producto</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered" id="editProductsTable">
+                                                        <thead class="thead-dark">
+                                                            <tr>
+                                                                <!--<th>N.</th>-->
+                                                                <th>N_Sub</th>
+                                                                <th>Nombre del producto</th>
+                                                                <th>Tipo de pallet</th>
+                                                                <th>Stock por pallet</th>
+                                                                <th>Cantidad de producto por pallet</th>
+                                                                <th>Cantidad de pallet</th>
+                                                                <th>Pallet dañado</th>
+                                                                <th>Stock dañado</th>
+                                                                <!--<th>Pallet Ok</th>-->
+                                                                <th>Stock Ok</th>
+                                                                <th>Tipo de movimiento</th>
+                                                                <th>Caducidad</th>
+                                                                <th>Nota</th>
+                                                                <th>Estatus</th>
+                                                               <!-- <th>Acciones</th>-->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php $index = 1; ?>
+                                                            <!-- var_dump($generated_products) ?>-->
+
                                                             <?php if (isset($generated_products) && is_array($generated_products)) : ?>
                                                                 <?php foreach ($generated_products as $product) : ?>
                                                                     <tr>
@@ -2031,21 +2879,7 @@
             });
         });
 
-        /* function updateQuantityProductByPallet(index) {
-             const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
-             const quantityProductPallet = parseFloat(document.getElementById(`quantity_product_pallet_${index}`).value) || 0;
-
-             // Verificar si quantityProductPallet es mayor que el stockInicial
-             if (quantityProductPallet > stockInicial) {
-                 // Si es mayor, puedes decidir si:
-                 // 1. Mostrar un mensaje de error o advertencia
-                 alert(`La cantidad por pallet no puede ser mayor que el stock disponible (${stockInicial}).`);
-
-                 // 2. O asignar automáticamente el stock como cantidad máxima permitida
-                 document.getElementById(`quantity_product_pallet_${index}`).value = stockInicial;
-             }
-         }*/
-
+      
         function updateQuantityPallet(index) {
             const damagedPallets = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
             const quantityPallet = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
@@ -2085,12 +2919,7 @@
             actualizarStockOk(index);
         }
 
-        /* function actualizarPalletsOk(index) {
-             const cantidadInicial = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
-             const palletsDañados = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
-             const palletsOk = cantidadInicial - palletsDañados;
-             document.getElementById(`good_pallets_${index}`).value = palletsOk;
-         }*/
+      
 
         function actualizarStockOk(index) {
             const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
@@ -2099,34 +2928,13 @@
             document.getElementById(`good_stock_${index}`).value = stockOk;
         }
     </script>
-    <!--<script>
-         function updateAvailablePallet(index) {
-            // Obtenemos los valores de los inputs 1 y 2
-            var stockInsert = document.getElementById(`stock_${index}`).value;
-            //var quantityPalletInsert = document.getElementById(`quantity_pallet_${index}`).value;
+   
 
-            // Actualiza el valor del input available_pallets concatenando los valores
-            document.getElementById(`available_pallets_${index}`).value = `Stock: ${stockInsert}`;
-        }
-    </script>-->
-    <!-- < <script>
-        // Función que revisa periódicamente si ha cambiado el valor
-        function monitorInputs(index) {
-        setInterval(function() {
-        // Recuperar los valores de los inputs
-        var stockInsert = document.getElementById(`stock_${index}`).value;
-        var quantityPalletInsert = document.getElementById(`quantity_pallet_${index}`).value;
-
-        document.getElementById(`available_pallets_${index}`).value = `Stock: ${stockInsert}, Pallets: ${quantityPalletInsert}`;
-        }, 1000); // Intervalo de 500ms para detectar cambios
-        }
+    <!-- ================================================== END EDITAR2 ================================================== -->
 
 
-        // Iniciar la monitorización al cargar la página
-        window.onload = monitorInputs;
-        </script>-->
 
-    <!-- ================================================== END EDIT ================================================== -->
+
 
  <!-- ================================================== EDITAR ================================================== -->
  <?php } elseif ($action == 'editar') { ?>

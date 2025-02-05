@@ -2509,6 +2509,7 @@ public function get_details_by_identification($identification_number)
 public function get_all_products_by_identification($identification_number) {
     // Aplica la condición WHERE para filtrar los registros por identification_number
     $this->db->where('identification_number', $identification_number);
+	$this->db->where("id_movement IS NOT NULL");
 
     // Ejecuta la consulta en la tabla 'arrivaltwo'
     $query = $this->db->get('arrivaltwo'); // Asegúrate de que el nombre de la tabla sea correcto
@@ -2522,6 +2523,27 @@ public function get_all_products_by_identification($identification_number) {
     // Devuelve el resultado de la consulta
     return $query->result();
 }
+
+public function get_all_products_by_identificationtwo($identification_number) {
+    // Aplica la condición WHERE para filtrar los registros por identification_number
+    $this->db->where('identification_number', $identification_number);
+	$this->db->where("id_movement IS NULL");
+	//$this->db->where("updated_by IS NULL");
+
+    // Ejecuta la consulta en la tabla 'arrivaltwo'
+    $query = $this->db->get('arrivaltwo'); // Asegúrate de que el nombre de la tabla sea correcto
+
+    // Verifica si hay algún error en la consulta
+    if (!$query) {
+        echo $this->db->last_query(); // Muestra la última consulta SQL para depuración
+        echo $this->db->error(); // Muestra el error de la base de datos
+    }
+
+    // Devuelve el resultado de la consulta
+    return $query->result();
+}
+
+
 public function get_all_products_by_identification_arrival($identification_number) {
     // Aplica la condición WHERE para filtrar los registros por identification_number
     $this->db->where('identification_number', $identification_number);
@@ -2746,7 +2768,41 @@ public function grid_all_arrivaltwo2($select, $sidx, $sord, $limit, $start, $whe
 		$Q = $this->db->get();
 		$data = $Q->num_rows();
 		return $data;
-	}
+	} //descomentar si no funciona
+
+	public function has_sub_movements($id_main) {
+    $this->db->select("COUNT(*) as total");
+    $this->db->from("arrivaltwo");
+    $this->db->where("id_main", $id_main);
+    $this->db->where("id_movement IS NOT NULL"); // Solo cuenta si tiene sub-movements
+    $query = $this->db->get();
+    $result = $query->row();
+    return ($result && $result->total > 0); // Retorna true si hay registros con sub-movements
+}
+
+public function get_arrivalstwo($where = "", $like = "", $limit = "", $offset = "")
+{
+    $this->db->select("*");
+    $this->db->from("arrivaltwo"); // Ajusta el nombre de la tabla si es diferente
+
+    if ($where) {
+        $this->db->where($where);
+    }
+    if ($like) {
+        foreach ($like as $key => $value) {
+            $this->db->like($key, $value);
+        }
+    }
+    if (!empty($limit) && !empty($offset)) {
+        $this->db->limit($limit, $offset);
+    } elseif (!empty($limit)) {
+        $this->db->limit($limit);
+    }
+
+    $query = $this->db->get();
+    return $query->result(); // Devuelve los registros encontrados
+}
+
 
 //************************************************************************************************************************ */
 //CONFIGURATION TABEL BOARDING
@@ -3153,7 +3209,7 @@ public function update_position_availability($id_position, $is_available)
 							SUM(stock) AS total_stock_arrival, 
 							SUM(damaged_stock) AS total_damaged_stock_arrival, 
 							SUM(good_stock) AS total_ok_stock_arrival');
-		$this->db->from('arrivalnew');
+		$this->db->from('arrivaltwo');
 		$this->db->where('id_movement IS NOT NULL');
 		$this->db->group_by('id_product');
 		$query = $this->db->get();
