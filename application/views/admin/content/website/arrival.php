@@ -228,7 +228,9 @@
                                                                     </a>-->
                                                                     <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
                                                                         href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar2/'.$row->id_main); ?>"
-                                                                        <?php echo ($disable_edit[$row->id_main] ?? false) ? 'onclick="return false;"' : ''; ?>>
+                                                                        <?php if ($disable_edit[$row->id_main] ?? false) : ?>
+                                                                            onclick="alert('No es posible volver a generar registros por pallet porque ya existen.'); return false;"
+                                                                        <?php endif; ?>>
                                                                         <i class="icon wb-pencil"></i>
                                                                     </a>
 
@@ -236,9 +238,17 @@
                                                                     <a class="text-danger" href="javascript:;" data-id="<?php echo $row->id_main; ?>" data-toggle="modal" data-target="#modal-konfirmasi" title="<?php echo $row->identification_number; ?>">
                                                                         <i class="icon wb-trash"></i>
                                                                     </a>
-                                                                    <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar/<?php echo $row->id_main; ?>">
+                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
+                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar/'.$row->id_main); ?>"
+                                                                        <?php if ($disable_edit[$row->id_main] ?? false) : ?>
+                                                                            onclick="alert('No es posible agregar más productos a este arribo porque ya se ha generado los registros por pallet.'); return false;"
+                                                                        <?php endif; ?>>
                                                                         <i class="icon wb-plus"></i>
                                                                     </a>
+
+                                                                   <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar/<?php echo $row->id_main; ?>">
+                                                                        <i class="icon wb-plus"></i>
+                                                                    </a>-->
                                                                 </td>
                                                             <?php } ?>
 
@@ -2491,14 +2501,38 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                </div>
-                                <div class="col-md-12 mt-5 ">
-                                    <div class='button center mt-2'>
-                                        <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
+                                   <!-- <div class="col-md-12 mt-5 ">
+                                    <div class='button center mt-2 md-3'>
+                                        <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Generar registros" id="validateButton2">
                                         <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
                                     </div>
+                                </div>-->
+                                <div class="col-md-12 mt-5">
+                                    <div class='button center mt-2 md-3'>
+                                        <input class="btn btn-success btn-sm" 
+                                            type="submit" 
+                                            name="simpan" 
+                                            value="Generar registros" 
+                                            id="validateButton2"
+                                            onclick="return confirmarGeneracion();">
+                                            
+                                        <input class="btn btn-danger btn-sm" 
+                                            type="reset" 
+                                            name="batal" 
+                                            value="Cancelar" 
+                                            onclick="location.href='<?php echo site_url(); ?>website/arrival/view'">
+                                    </div>
+                            </div>
+
+                            <script>
+                            function confirmarGeneracion() {
+                                return confirm("¿Seguro que quieres generar los registros por pallet? Una vez generado, ya no podrás agregar más productos al arribo.");
+                            }
+                            </script>
+
+
                                 </div>
+                               
                             </form>
                         </div>
                     </div>
