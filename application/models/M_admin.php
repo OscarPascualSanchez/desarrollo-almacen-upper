@@ -1378,6 +1378,33 @@ public function get_type_type_movement($id_type_movement)
 }
 
 
+public function get_only_entrada_type_movement($select = 'id_type_movement, type_movements', $where = array())
+{
+	$data = array();
+	$this->db->select($select);
+	$this->db->from("type_movement");
+
+	// Aplicar condición para presentación activo si está presente en $where
+	if (!empty($where)) {
+		$this->db->where($where);
+	}
+
+	// Aplicar condición para status activo
+	$this->db->where('status', 'activo');
+	$this->db->where('type_movements', 'Entrada');
+
+	$Q = $this->db->get();
+
+	if ($Q->num_rows() > 0) {
+		$data = $Q->result(); // Obtener todos los resultados como un array de objetos
+	}
+
+	$Q->free_result();
+	return $data;
+}
+
+
+
 	//CONFIGURATION TABEL MEASUREMENT
 	public function insert_measurement($data)
 	{
@@ -2566,7 +2593,7 @@ public function get_all_products_by_identificationnew($identification_number) {
     $sql = "
         SELECT * 
         FROM arrivalnew
-        WHERE identification_number = ?
+        WHERE identification_number = ? AND  id_movement IS NOT NULL
         ORDER BY 
              COALESCE(id_arrival, id_movement) ASC, 
 			  id_movement ASC;
@@ -2646,6 +2673,7 @@ public function count_details_by_filter($identification_number, $search_query = 
 
 public function get_details_by_filter($identification_number, $limit, $offset, $search_query = '') {
     $this->db->where('identification_number', $identification_number);
+	$this->db->where('id_movement IS NOT NULL');
     if (!empty($search_query)) {
         $this->db->like('product_name', $search_query);
     }
