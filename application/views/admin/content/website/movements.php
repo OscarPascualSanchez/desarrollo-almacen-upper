@@ -478,7 +478,6 @@
                                                                     <th>Stock dañado</th>
                                                                     <th>Pallet Ok</th>
                                                                     <th>Stock Ok</th>
-                                                                    <th>Pallets disponibles</th>
                                                                     <th>Tipo de movimiento</th>
                                                                     <th>Fecha de movimiento</th>
                                                                     <th>Ubicación/Mov.</th>
@@ -496,13 +495,13 @@
                                                             <tbody>
                                                                 <?php $index = 1; ?>
                                                                 <!--var_dump($productss)-->
-                                                                <?php if (isset($generated_products) && is_array($generated_products)) : ?>
-                                                                    <?php foreach ($generated_products as $product) : ?>
+                                                                <?php if (isset($productss) && is_array($productss)) : ?>
+                                                                    <?php foreach ($productss as $product) : ?>
                                                                         <tr>
                                                                             <div class="form-group form-material">
                                                                                 <input type="hidden" name="products_update[<?php echo $index; ?>][id_arrivalnew]" value="<?= $product->id_arrivalnew ?>" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
                                                                             </div>
-                                                                           <!-- <td>
+                                                                            <!-- <td>
                                                                                 <div class="form-group form-material">
                                                                                     <?php if (!is_null($product->id_arrival)) : ?>
                                                                                         <input class="form-control input-sm" type="text" name="products_update[<?php echo $index; ?>][id_arrival]" id="id_arrival_<?php echo $index; ?>" value="<?= $product->id_arrival ?>" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
@@ -511,10 +510,10 @@
                                                                             
                                                                                 </td>-->
                                                                             <!--<td><?= $index; ?></td>-->
-                                                                           <!-- <td><?= $product->id_movement; ?></td>-->
-                                                                           
+                                                                            <!-- <td><?= $product->id_movement; ?></td>-->
 
-                                                                           <td>
+
+                                                                            <td>
                                                                                 <div class="form-group form-material">
                                                                                     <?php if (!is_null($product->id_movement)) : ?>
                                                                                         <input class="form-control input-sm" type="text" name="products_update[<?php echo $index; ?>][id_movement]" id="id_movement_<?php echo $index; ?>" value="<?= $product->id_movement ?>" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
@@ -548,15 +547,15 @@
                                                                             <td>
                                                                                 <input type="hidden" name="products_update[<?php echo $index; ?>][id_platform]" value="<?= $product->id_platform ?>" />
                                                                                 <div class="form-group form-material">
-                                                                                    <select name="products_update[<?php echo $index; ?>][id_platform]" 
-                                                                                    class="form-control"
-                                                                                    style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" 
-                                                                                    onchange="document.getElementById('type_platform_<?php echo $index; ?>').value = this.options[this.selectedIndex].text">
+                                                                                    <select name="products_update[<?php echo $index; ?>][id_platform]"
+                                                                                        class="form-control"
+                                                                                        style="padding: 5px; font-size: 12px; text-align: center; width: 200px;"
+                                                                                        onchange="document.getElementById('type_platform_<?php echo $index; ?>').value = this.options[this.selectedIndex].text">
                                                                                         <option value="">Seleccione un tipo de pallet</option>
                                                                                         <?php foreach ($platforms as $platform) : ?>
-                                                                                            <option value="<?= $platform->id_platform ?>" 
-                                                                                            <?php echo ($product->id_platform == $platform->id_platform) ? 'selected' : ''; ?>>
-                                                                                            <?= $platform->type_platform ?>
+                                                                                            <option value="<?= $platform->id_platform ?>"
+                                                                                                <?php echo ($product->id_platform == $platform->id_platform) ? 'selected' : ''; ?>>
+                                                                                                <?= $platform->type_platform ?>
                                                                                             </option>
                                                                                         <?php endforeach; ?>
                                                                                     </select>
@@ -600,11 +599,6 @@
                                                                             <td>
                                                                                 <div class="form-group form-material">
                                                                                     <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][good_stock]" value="<?php echo $product->good_stock; ?>" placeholder="Escribe el stock OK" id="good_stock_<?php echo $index; ?> " data-id-arrival="<?php echo $product->id_arrival; ?>" data-original-good-stock="<?php echo $product->good_stock; ?>" data-id-movement="<?php echo $idMovement; ?>" data-product-id-movement="<?php echo $product->id_movement; ?>" required readonly />
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group form-material">
-                                                                                    <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][available_pallets]" value="<?php echo $product->available_pallets; ?>" placeholder="Escribe " id="available_pallets_<?php echo $index; ?>" required />
                                                                                 </div>
                                                                             </td>
                                                                             <td>
@@ -715,7 +709,7 @@
                                                                                 <button type="button" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="removeProductRow(this)">Eliminar</button>
                                                                             </td>
                                                                         </tr>
-                                                                                        
+
                                                                         <?php $index++; ?>
                                                                     <?php endforeach; ?>
                                                                 <?php else : ?>
@@ -875,14 +869,16 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                         </div>
+                                        <div class="col-md-12 mt-5">
+                                                <div class='button center mt-2'>
+                                                    <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Guardar datos" id="validateButton2">
+                                                    <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/all_arrivals'" />
+                                                </div>
+                                            </div>
                                     </div>
-                                    <div class="col-md-12 mt-5 ">
-                                        <div class='button center mt-2'>
-                                            <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Guardar datos" id="validateButton2">
-                                            <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/all_arrivals'" />
-                                        </div>
-                                    </div>
+
                                 </form>
                             </div>
                         </div>

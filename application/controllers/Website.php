@@ -2958,6 +2958,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 								  'damaged_stock' => validasi_sql($product['damaged_stock']),
 								  'good_pallets' => validasi_sql($product['good_pallets']),
 								  'good_stock' => validasi_sql($product['good_stock']),
+								  'id_type_movement' => validasi_sql($product['id_type_movement']),
 								  'type_movements' => validasi_sql($product['type_movements']),
 								 // 'available_pallets' => validasi_sql($product['available_pallets']),
 								  'arrival_time' => validasi_sql($data['arrival_time']),
@@ -3059,6 +3060,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$products['damaged_stock']	          = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $arrivaltwo->damaged_stock;
 					$products['good_pallets']	          = ($this->input->post('good_pallets')) ? $this->input->post('good_pallets') : $arrivaltwo->good_pallets;
 					$products['good_stock']	              = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : $arrivaltwo->good_stock;
+					$prroducts['id_type_movement']        = ($this->input->post('id_type_movement')) ? $this->input->post('id_type_movement') : $arrivaltwo->id_type_movement; 
 					$products['type_movements']           = ($this->input->post('type_movements')) ? $this->input->post('type_movements') : $arrivaltwo->type_movements;
 					$products['expiration_date']	      = ($this->input->post('expiration_date')) ? $this->input->post('expiration_date') : $arrivaltwo->expiration_date;
 					// Datos adicionales del producto
@@ -3146,6 +3148,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 										'damaged_stock' => validasi_sql($product['damaged_stock']),
 										//'good_pallets' => validasi_sql($product['good_pallets']),
 										'good_stock' => validasi_sql($product['good_stock']),
+										'id_type_movement' => validasi_sql($product['id_type_movement']),
 										'type_movements' => validasi_sql($product['type_movements']),
 										'expiration_date' => validasi_sql($product['expiration_date']),
 										'note' => validasi_sql($product['note']),
@@ -3222,7 +3225,8 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 									'damaged_stock'            =>  $product->damaged_stock,
 									'good_pallet'              =>  $product->good_pallets,
 									'good_stock'               =>  $stockPerPallet,
-									'type_movements'          =>  $product->type_movements,
+									'id_type_movement'         =>  $product->id_type_movement,
+									'type_movements'           =>  $product->type_movements,
 									'expiration_date'          =>  $product->expiration_date,
 									'note'                     =>  $product->note,
 									'status'                   =>  $product->status,
@@ -3276,6 +3280,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$products['damaged_stock']	          = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $arrivaltwo->damaged_stock;
 					$products['good_pallets']	          = ($this->input->post('good_pallets')) ? $this->input->post('good_pallets') : $arrivaltwo->good_pallets;
 					$products['good_stock']	              = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : $arrivaltwo->good_stock;
+					$products['id_type_movement']         = ($this->input->post('id_type_movement')) ? $this->input->post('id_type_movement') : $arrivaltwo->id_type_movement;
 					$products['type_movements']           = ($this->input->post('type_movements')) ? $this->input->post('type_movements') : $arrivaltwo->type_movements;
 					$products['expiration_date']	      = ($this->input->post('expiration_date')) ? $this->input->post('expiration_date') : $arrivaltwo->expiration_date;
 					// Datos adicionales del producto
@@ -3489,6 +3494,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$products['damaged_stock']	          = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $arrival->damaged_stock;
 					$products['good_pallets']	          = ($this->input->post('good_pallets')) ? $this->input->post('good_pallets') : $arrival->good_pallets;
 					$products['good_stock']	              = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : $arrival->good_stock;
+					$products['id_type_movement']         = ($this->input->post('id_type_movement')) ? $this->input->post('id_type_movement') : $arrival->id_type_movement;
 					$products['type_movements']           = ($this->input->post('type_movements')) ? $this->input->post('type_movements') : $arrival->type_movements;
 					$products['expiration_date']	      = ($this->input->post('expiration_date')) ? $this->input->post('expiration_date') : $arrival->expiration_date;
 					// Datos adicionales del producto
@@ -3561,6 +3567,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 										'damaged_stock' => validasi_sql($product['damaged_stock']),
 										//'good_pallets' => validasi_sql($product['good_pallets']),
 										//'good_stock' => validasi_sql($product['good_stock']),
+										'id_type_movement' => validasi_sql($product['id_type_movement']),
 										'type_movements' => validasi_sql($product['type_movements']),
 										'expiration_date' => validasi_sql($product['expiration_date']),
 										'note' => validasi_sql($product['note']),
@@ -3647,6 +3654,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 										'maneuver_end' => validasi_sql($data['maneuver_end']),
 										'departure_time' => validasi_sql($data['departure_time']),
 										'note' => validasi_sql($new_product['note']),
+										'id_type_movement' => validasi_sql($new_product['id_type_movement']),
 										'type_movements' => validasi_sql($new_product['type_movements']),
 										'status' => validasi_sql($new_product['status']),
 										'created_by' => validasi_sql($data['created_by']),
@@ -3719,6 +3727,8 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 				$data['transports'] = $this->ADM->get_all_transport('id_transport, platenumber, vehicletype', $where_transport);
 				$where_driver = array('status_driver' => 'activo');
 				$data['drivers'] = $this->ADM->get_all_driver('id_driver, name_driver', $where_driver);
+				$where_type_movement = array('status' => 'activo');
+				$data['movements'] = $this->ADM->get_only_entrada_type_movement('id_type_movement, type_movements', $where_type_movement);
 				
 			$this->load->vars($data);
 			$this->load->view('admin/home');
@@ -4082,43 +4092,7 @@ public function details($identification_number = '', $page = 1) {
 					 // Llamar al modelo para obtener los datos organizados
 					 //$data['productss'] = $this->ADM->get_all_products_by_identificationnew($arrivalnew->$identification_number);
 
-					 //Generar subregistros basados en quantity_pallet
-					 $generatedProducts = [];
-					 foreach ($data['productss'] as $product) {
-						 // Calcula el stock por pallet
-                        $stockPerPallet = $product->quantity_pallet > 0 ? $product->stock / $product->quantity_pallet : 0;
-						for ($i  = 1; $i <= $product->quantity_pallet; $i++ ) {
-							$generatedProducts[] = (object) [
-								'id_arrivalnew'            =>  $product->id_arrivalnew,
-								'id_arrival'               =>  $product->id_arrival, 
-								'id_movement'              =>  "{$product->id_arrival}.$i", // Subregistro
-								'id_product'               =>  $product->id_product,
-								'product_name'             =>  $product->product_name,
-								'id_platform'              =>  $product->id_platform,
-								'type_platform'            =>  $product->type_platform,
-								'stock'                    =>  $stockPerPallet,
-								'quantity_product_pallet'  =>  $product->quantity_product_pallet,
-								'quantity_pallet'          =>   1, // Cada subregistro tiene un pallet
-								'damaged_pallet'           =>  $product->damaged_pallets,
-								'damaged_stoc'             =>  $product->damaged_stock,
-								'good_pallet'              =>  $product->good_pallets,
-								'good_stock'               =>  $product->good_stock,
-								'available_pallets'        =>  $product->available_pallets,
-								'type_movemenets'          =>  $product->type_movements,
-								'movemenet_date'           =>  $product->movement_date,
-								'row_location'             =>  $product->row_location,
-								'column_location'          =>  $product->column_location,
-								'rack_number'              =>  $product->rack_number,
-								'level'                    =>  $product->level,
-								'movement_created_by'      =>  $product->movement_created_by,
-								'expiration_date'          =>  $product->expiration_date,
-								'note'                     =>  $product->note,
-								'status'                   =>  $product->status,
-
-							];
-						}
-					 }
-					 $data['generated_products'] = $generatedProducts;
+					 
 					
 					// Actualizar datos generales del arribo
 					$data['id_arrivalnew'] = $this->input->post('id_arrivalnew') ?: $arrivalnew->id_arrivalnew;

@@ -854,9 +854,32 @@
                                                                 </td>-->
                                                                 <td>
                                                                     <div class="form-group form-material">
-                                                                        <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products[0][type_movements]" id="type_movements_0" value="Entrada" required readonly />
+                                                                        <?php if (!empty($movements)): ?>
+                                                                            <?php foreach ($movements as $movementss): ?>
+                                                                                <!-- Campo visible con el tipo de movimiento -->
+                                                                                <input type="text" step="any" class="form-control input-sm" 
+                                                                                    style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                                                                                    name="products[0][type_movements]" id="type_movements_0"
+                                                                                    value="<?= htmlspecialchars($movementss->type_movements) ?>" 
+                                                                                    required readonly />
+
+                                                                                <!-- Campo oculto con el ID del movimiento -->
+                                                                                <input type="hidden" name="products[0][id_type_movement]" 
+                                                                                    value="<?= htmlspecialchars($movementss->id_type_movement) ?>" />
+                                                                            <?php endforeach; ?>
+                                                                        <?php else: ?>
+                                                                            <input type="text" step="any" class="form-control input-sm" 
+                                                                                style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                                                                                name="products[0][type_movements]" id="type_movements_0"
+                                                                                value="Entrada" required readonly />
+
+                                                                            <input type="hidden" name="products[0][id_type_movement]" value="1" />
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 </td>
+
+
+                                                              
 
                                                                 <td>
                                                                     <div class="form-group form-material">
@@ -1586,6 +1609,9 @@
                                                                         <td>
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
+                                                                                <input type="hidden"
+                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                value="<?= $product->id_type_movement ?>" /> 
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -2426,6 +2452,9 @@
                                                                         <td>
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
+                                                                                <input type="hidden"
+                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                value="<?= $product->id_type_movement ?>" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -3229,6 +3258,10 @@
                                                                         <td>
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
+                                                                                <input type="hidden"
+                                                                                id="id_type_movement_<?php echo $index; ?>"
+                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                value="<?= $product->id_type_movement ?>" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -3304,16 +3337,17 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="col-md-12 mt-5 ">
+                                        <div class='button center mt-2'>
+                                            <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
+                                            <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
+                                        </div>
                                 </div>
-                                <div class="col-md-12 mt-5 ">
-                                    <div class='button center mt-2'>
-                                        <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
-                                        <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
-                                    </div>
                                 </div>
                             </form>
+                           
                         </div>
+                       
                     </div>
 
                 </div>
@@ -3452,8 +3486,27 @@
         </td>
         <td>
             <div class="form-group form-material">
-                <input type="text" step="any" class="form-control input-sm" name="products_insert[${index}][type_movements]" id="type_movements_${index}" value="Entrada" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" required readonly />
+                <?php if (!empty($movements)): ?>
+                    <?php foreach ($movements as $movementss): ?>
+                        <input type="text" step="any" class="form-control input-sm" 
+                            style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                            name="products_insert[${index}][type_movements]" id="type_movements_${index}"
+                            value="<?= htmlspecialchars($movementss->type_movements) ?>" 
+                            required readonly />
+                             <!-- Campo oculto con el ID del movimiento -->
+                        <input type="hidden" name="products_insert[${index}][id_type_movement]" 
+                            value="<?= htmlspecialchars($movementss->id_type_movement) ?>" />
+                    <?php endforeach; ?>
+                 <?php else: ?>
+                        <input type="text" step="any" class="form-control input-sm" 
+                            style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                            name="products_insert[${index}][type_movements]" id="type_movements_${index}"
+                            value="Entrada" required readonly />
+
+                        <input type="hidden" name="products_insert[${index}][id_type_movement]" value="1" />
+                <?php endif; ?>
             </div>
+        </div>
         </td>
         <td>
             <div class="form-group form-material">
