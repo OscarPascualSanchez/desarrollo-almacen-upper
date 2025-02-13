@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="panel rounded-0">
                     <div class="panel-heading rounded-0">
-                        <h3 class="panel-title">¡Rodrigooooooooooooooooo!</h3> <!--Welcome to the Administrator's-->
+                    <h3 class="panel-title">¡Bienvenido al panel de administración!</h3> <!--Welcome to the Administrator's-->
                     </div>
                     <div class="panel-body container-fluid">
                         <div class="blockquote gray">

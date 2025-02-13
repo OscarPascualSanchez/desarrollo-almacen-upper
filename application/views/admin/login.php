@@ -69,7 +69,7 @@
 				<h2 class="brand-text">
 					<!-- <?php echo $web->identitas_website;?> -->
 					<!--Warehouse Management System-->
-					Sistema de Gestión de Almacen CESAR
+					Sistema de Gestión de Almacen
 				</h2>
 			</div>
 
