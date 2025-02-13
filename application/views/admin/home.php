@@ -91,7 +91,7 @@
 				</ul>
 				<ul class="breadcrumb">
 					<li class="active">
-						<a href="<?php echo base_url(); ?>admin">Dashboard</a>
+						<a href="<?php echo base_url(); ?>admin">Dashboard Gonzalez</a>
 					</li>
 					<li>
 						<?php echo $breadcrumb; ?>
