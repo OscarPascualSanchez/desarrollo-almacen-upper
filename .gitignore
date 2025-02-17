@@ -2,5 +2,6 @@
 uploads/
 application/config/
 .vscode/
-/vendor/
-/system/core/Config.php
+vendor/
+system/core/Config.php
+application/logs
