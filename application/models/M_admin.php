@@ -2279,22 +2279,31 @@ public function get_container_type_by_number($container_number) {
 	}
 
 
-	public function get_vehicletype_by_platenumber($platenumber)
-{
-    $this->db->select('id_transport, vehicletype');
-    $this->db->from('transport');
-    $this->db->where('platenumber', $platenumber);
-    $query = $this->db->get();
-    return $query->row();
-}
-public function get_id_transport_by_platenumber($platenumber)
-{
-    $this->db->select('id_transport');
-    $this->db->from('transport');
-    $this->db->where('platenumber', $platenumber);
-    $query = $this->db->get();
-    return $query->row()->id_transport;
-}
+	public function search_platenumbers($term)
+    {
+        $this->db->select('platenumber');
+        $this->db->from('transport');
+        $this->db->like('platenumber', $term); // Busca coincidencias parciales
+        $query = $this->db->get();
+        return $query->result_array(); // Devuelve los resultados como un array
+    }
+
+    public function get_vehicletype_by_platenumber($platenumber)
+    {
+        $this->db->select('id_transport, vehicletype');
+        $this->db->from('transport');
+        $this->db->where('platenumber', $platenumber);
+        $query = $this->db->get();
+        return $query->row();
+    }
+	public function get_id_transport_by_platenumber($platenumber)
+	{
+		$this->db->select('id_transport');
+		$this->db->from('transport');
+		$this->db->where('platenumber', $platenumber);
+		$query = $this->db->get();
+		return $query->row()->id_transport;
+	}
 
 	public function get_platenumber($id_transport)
 	{
@@ -2325,13 +2334,7 @@ public function get_id_transport_by_platenumber($platenumber)
 			return null; // O un valor predeterminado, si es necesario
 		}
 	}
-	public function get_vehicletype_by_platenumber1($platenumber) {
-		$this->db->select('vehicletype');
-		$this->db->from('transport');
-		$this->db->where('platenumber', $platenumber);
-		$query = $this->db->get();
-		return $query->row()->vehicletype;
-	}
+	
 
 	//CONFIGURATION TABLE ARRIVAL
 	public function insert_arrival($data)

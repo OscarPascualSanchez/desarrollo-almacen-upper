@@ -728,12 +728,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="platenumber">Número de Placa</label>
-                                                            <select name="platenumber" id="platenumber" class="form-control">
-                                                                <option value="">Seleccione el n. de placa</option>
-                                                                <?php foreach ($transports as $transport) : ?>
-                                                                    <option value="<?= $transport->platenumber ?>"><?= $transport->platenumber ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                                                            <input type="text" name="platenumber" id="platenumber" class="form-control" placeholder="Escriba el número de placa">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="vehicletype">Tipo de unidad / transporte</label>
@@ -989,6 +984,7 @@
         </button>
     </a>
     <script>
+
         let rowIndex = 1;
 
         function addProductRow() {
@@ -1109,8 +1105,8 @@
             const row = button.closest('tr');
             row.remove();
         }
+
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             // Cargar productos cuando se cambia el proveedor
@@ -1194,7 +1190,6 @@
             }
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     </script>
     <script>
@@ -1220,25 +1215,51 @@
         });
     </script>
     <script>
-        document.getElementById('platenumber').addEventListener('change', function() {
-            var platenumber = this.value;
-            if (platenumber) {
-                fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
-                    .then(response => response.json())
-                    .then(data => {
-                        var vehicletypeSelect = document.getElementById('vehicletype');
-                        vehicletypeSelect.innerHTML = ''; // Limpiar opciones anteriores
-                        if (data.vehicletype) {
-                            var option = document.createElement('option');
-                            option.value = data.vehicletype;
-                            option.text = data.vehicletype;
-                            vehicletypeSelect.add(option);
+        $(document).ready(function() {
+            $("#clearForm").click(function() {
+                $("form")[0].reset(); // Restablece el formulario
+                $("#platenumber").trigger("input"); // Dispara el evento input
+            });
+            // Configura el autocompletado para el campo #platenumber
+            $("#platenumber").autocomplete({
+                source: function(request, response) {
+                    // Realiza una solicitud AJAX al servidor para obtener los números de placa
+                    $.ajax({
+                        url: "<?= site_url('Website/get_platenumbers') ?>", // URL del controlador
+                        dataType: "json",
+                        data: {
+                            term: request.term // Término de búsqueda
+                        },
+                        success: function(data) {
+                            // Envía los datos de respuesta al autocompletado
+                            response(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error en la solicitud AJAX:", error);
                         }
                     });
-            } else {
-                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
-                document.getElementById('vehicletype').innerHTML = '<option value="">Seleccione un tipo de unidad de trasnporte</option>';
-            }
+                },
+                minLength: 1, // Número mínimo de caracteres para iniciar la búsqueda
+                select: function(event, ui) {
+                    // Cuando se selecciona un elemento, obtén el tipo de vehículo
+                    var platenumber = ui.item.value;
+                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
+                        .then(response => response.json())
+                        .then(data => {
+                            var vehicletypeSelect = document.getElementById('vehicletype');
+                            vehicletypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                            if (data.vehicletype) {
+                                var option = document.createElement('option');
+                                option.value = data.vehicletype;
+                                option.text = data.vehicletype;
+                                vehicletypeSelect.add(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error al obtener el tipo de vehículo:", error);
+                        });
+                }
+            });
         });
     </script>
     <script>
@@ -1884,7 +1905,6 @@
             row.remove();
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -2042,7 +2062,7 @@
         document.getElementById('platenumber').addEventListener('change', function() {
             var platenumber = this.value;
             if (platenumber) {
-                fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
+                fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
                     .then(response => response.json())
                     .then(data => {
                         var vehicletypeSelect = document.getElementById('vehicletype');
@@ -2751,7 +2771,6 @@
             row.remove();
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -2909,7 +2928,7 @@
         document.getElementById('platenumber').addEventListener('change', function() {
             var platenumber = this.value;
             if (platenumber) {
-                fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
+                fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
                     .then(response => response.json())
                     .then(data => {
                         var vehicletypeSelect = document.getElementById('vehicletype');
@@ -3544,7 +3563,6 @@
             row.remove();
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -3702,7 +3720,7 @@
         document.getElementById('platenumber').addEventListener('change', function() {
             var platenumber = this.value;
             if (platenumber) {
-                fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
+                fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
                     .then(response => response.json())
                     .then(data => {
                         var vehicletypeSelect = document.getElementById('vehicletype');

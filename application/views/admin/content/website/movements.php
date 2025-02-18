@@ -1426,7 +1426,6 @@
         </script>
 
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
         <script>
@@ -1583,7 +1582,7 @@
             document.getElementById('platenumber').addEventListener('change', function() {
                 var platenumber = this.value;
                 if (platenumber) {
-                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
+                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
                         .then(response => response.json())
                         .then(data => {
                             var vehicletypeSelect = document.getElementById('vehicletype');
