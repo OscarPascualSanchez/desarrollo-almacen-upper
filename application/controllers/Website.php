@@ -3040,7 +3040,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$data['event_date']        = $this->input->post('event_date') ?: $arrivaltwo->event_date;
 					$data['id_transport']      = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
 					$data['platenumber']       = $this->input->post('platenumber') ?: $arrivaltwo->platenumber;
-					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber($data['platenumber']);
 					$data['id_driver']         = $this->input->post('id_driver') ?: $arrivaltwo->id_driver;
 					$data['name_driver']       = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrivaltwo->name_driver;
 
@@ -3260,7 +3260,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$data['event_date']        = $this->input->post('event_date') ?: $arrivaltwo->event_date;
 					$data['id_transport']      = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
 					$data['platenumber']       = $this->input->post('platenumber') ?: $arrivaltwo->platenumber;
-					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber($data['platenumber']);
 					$data['id_driver']         = $this->input->post('id_driver') ?: $arrivaltwo->id_driver;
 					$data['name_driver']       = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrivaltwo->name_driver;
 
@@ -3474,7 +3474,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 					$data['event_date']        = $this->input->post('event_date') ?: $arrival->event_date;
 					$data['id_transport']      = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
 					$data['platenumber']       = $this->input->post('platenumber') ?: $arrival->platenumber;
-					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['vehicletype']       = $this->ADM->get_vehicletype_by_platenumber($data['platenumber']);
 					$data['id_driver']         = $this->input->post('id_driver') ?: $arrival->id_driver;
 					$data['name_driver']       = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrival->name_driver;
 
@@ -3754,24 +3754,33 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 			echo json_encode(['container_type' => '']);
 		}
 	}
-	public function get_vehicletype_by_platenumber($platenumber)
-	{
-		$transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
-		if ($transport) {
-			echo json_encode(['vehicletype' => $transport->vehicletype]);
-		} else {
-			echo json_encode(['vehicletype' => '']);
-		}
-	}
-	public function get_vehicletype_by_platenumber1($platenumber)
-	{
-		$transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
-		if ($transport) {
-			echo json_encode(['vehicletype' => $transport->vehicletype]);
-		} else {
-			echo json_encode(['vehicletype' => '']);
-		}
-	}
+	public function get_platenumbers()
+    {
+        $term = $this->input->get('term'); // Obtén el término de búsqueda
+		$this->load->model('ADM');
+        $results = $this->ADM->search_platenumbers($term);
+
+        // Formatea los resultados para jQuery UI Autocomplete
+        $formatted_results = array();
+        foreach ($results as $row) {
+            $formatted_results[] = array(
+                'label' => $row['platenumber'], // Texto que se muestra en la lista
+                'value' => $row['platenumber']  // Valor que se asigna al campo
+            );
+        }
+
+        echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+    }
+
+    public function get_vehicletype_by_platenumber($platenumber)
+    {
+        $transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
+        if ($transport) {
+            echo json_encode(['vehicletype' => $transport->vehicletype]);
+        } else {
+            echo json_encode(['vehicletype' => '']);
+        }
+    }
 
 
 
@@ -4113,7 +4122,7 @@ public function details($identification_number = '', $page = 1) {
 					$data['event_date'] = $this->input->post('event_date') ?: $arrivalnew->event_date;
 					$data['id_transport'] = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
 					$data['platenumber'] = $this->input->post('platenumber') ?: $arrivalnew->platenumber;
-					$data['vehicletype'] = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['vehicletype'] = $this->ADM->get_vehicletype_by_platenumber($data['platenumber']);
 					$data['id_driver'] = $this->input->post('id_driver') ?: $arrivalnew->id_driver;
 					$data['name_driver'] = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrivalnew->name_driver;
 
@@ -4655,7 +4664,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 					$data['event_date'] = $this->input->post('event_date') ?: $arrival->event_date;
 					$data['id_transport'] = $this->ADM->get_id_transport_by_platenumber($this->input->post('platenumber'));
 					$data['platenumber'] = $this->input->post('platenumber') ?: $arrival->platenumber;
-					$data['vehicletype'] = $this->ADM->get_vehicletype_by_platenumber1($data['platenumber']);
+					$data['vehicletype'] = $this->ADM->get_vehicletype_by_platenumber($data['platenumber']);
 					$data['id_driver'] = $this->input->post('id_driver') ?: $arrival->id_driver;
 					$data['name_driver'] = $this->input->post('id_driver') ? $this->ADM->get_name_driver($data['id_driver']) : $arrival->name_driver;
 
