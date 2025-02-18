@@ -1215,11 +1215,7 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $("#clearForm").click(function() {
-                $("form")[0].reset(); // Restablece el formulario
-                $("#platenumber").trigger("input"); // Dispara el evento input
-            });
+        $(document).ready(function() {            
             // Configura el autocompletado para el campo #platenumber
             $("#platenumber").autocomplete({
                 source: function(request, response) {
@@ -1260,6 +1256,13 @@
                         });
                 }
             });
+            // Evento para detectar cuando el campo de placa esté vacío
+            $("#platenumber").on("input", function() {
+                if ($(this).val().trim() === "") {
+                    // Si el campo de placa está vacío, limpia el campo de tipo de vehículo
+                    $("#vehicletype").html('<option value="">Seleccione un tipo de unidad de transporte</option>');
+                }
+            });                          
         });
     </script>
     <script>
