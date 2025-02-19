@@ -1931,8 +1931,8 @@ public function get_container_type_by_number($container_number) {
 		return $data;
 	}
 
-	public function get_all_origin($select = 'id_origin, state', $where = array())
-	{
+	//Obtener todos los orígenes de la base de datos
+	public function get_all_origin($select = 'id_origin, state', $where = array()){
 		$data = array();
 		$this->db->select($select);
 		$this->db->from("origin");

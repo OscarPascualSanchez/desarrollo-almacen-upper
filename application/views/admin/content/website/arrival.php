@@ -704,15 +704,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mt-2">
-                                                        <div class="form-group">
-                                                            <label for="id_origin">Origen</label>
-                                                            <select name="id_origin" id="id_origin" class="form-control">
-                                                                <option value="">Seleccione el origen</option>
-                                                                <?php foreach ($origins as $origin) : ?>
-                                                                    <option value="<?= $origin->id_origin ?>"><?= $origin->state ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
+                                                    <div class="form-group">
+                                                        <label for="id_origin">Origen</label>
+                                                        <input type="text" name="id_origin" id="id_origin" class="form-control" placeholder="Escriba el origen">
+                                                    </div>
                                                         <div class="form-group">
                                                             <label for="id_maneuver">Tipo de maniobra</label>
                                                             <select name="id_maneuver" id="id_maneuver" class="form-control">
@@ -1191,7 +1186,7 @@
         }
     </script>
 
-    </script>
+    
     <script>
         document.getElementById('container_number').addEventListener('change', function() {
             var containerNumber = this.value;
@@ -1214,6 +1209,8 @@
             }
         });
     </script>
+
+    <!--Autocompletado Placa -->
     <script>
         $(document).ready(function() {            
             // Configura el autocompletado para el campo #platenumber
@@ -1265,6 +1262,61 @@
             });                          
         });
     </script>
+
+    <!--Autocompletado Origen -->
+    <script>
+        $(document).ready(function() {
+            // Variable para almacenar todos los orígenes
+            var allOrigins = [];
+
+            // Función para cargar todos los orígenes desde el servidor
+            function loadAllOrigins() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_origins') ?>", // URL para obtener todos los orígenes
+                    dataType: "json",
+                    success: function(data) {
+                        allOrigins = data; // Almacena todos los orígenes
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los orígenes:", error);
+                    }
+                });
+            }
+
+            // Cargar todos los orígenes al iniciar la página
+            loadAllOrigins();
+
+            // Configurar el autocompletado
+            $("#id_origin").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los orígenes basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredOrigins = allOrigins.filter(function(origin) {
+                        return origin.label.toLowerCase().includes(term);
+                    });
+                    response(filteredOrigins); // Enviar los orígenes filtrados al autocompletado
+                },
+                minLength: 0, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#id_origin").val(ui.item.label);
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#id_origin").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
+        });
+    </script>
+
+    
+
     <script>
         /*function updateQuantityProductByPallet(index) {
             const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
