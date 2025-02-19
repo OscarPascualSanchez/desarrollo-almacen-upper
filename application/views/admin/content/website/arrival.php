@@ -3236,7 +3236,9 @@
                                                         <div class="form-group">
                                                             <label for="vehicletype">Tipo de Unidad / Transporte</label>
                                                             <select name="vehicletype" id="vehicletype" class="form-control">
-                                                                <option value="<?= $vehicletype ?>" selected><?= $vehicletype ?></option>
+                                                                <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
+                                                                    <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
+                                                                </option>
                                                             </select>
                                                         </div>
                                                     </div>
