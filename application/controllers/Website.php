@@ -2829,7 +2829,7 @@ class Website extends CI_Controller
 
 
 	//FUNCTION ARRIVAL	
-public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
+	public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 	{
 		if ($this->session->userdata('logged_in') == TRUE) {
 			$where_admin['admin_user'] 	= $this->session->userdata('admin_user');
@@ -3754,8 +3754,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
 			echo json_encode(['container_type' => '']);
 		}
 	}
-	public function get_platenumbers()
-    {
+	public function get_platenumbers(){
         $term = $this->input->get('term'); // Obtén el término de búsqueda
 		$this->load->model('ADM');
         $results = $this->ADM->search_platenumbers($term);
@@ -3772,8 +3771,7 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
         echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
     }
 
-    public function get_vehicletype_by_platenumber($platenumber)
-    {
+    public function get_vehicletype_by_platenumber($platenumber){
         $transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
         if ($transport) {
             echo json_encode(['vehicletype' => $transport->vehicletype]);
@@ -3783,6 +3781,22 @@ public function arrival($filter1 = '', $filter2 = '', $filter3 = '')
     }
 
 
+	//Devuelve todos los origenes (El lugar)
+	public function get_all_origins(){
+		$this->load->model('ADM');
+		$results = $this->ADM->get_all_origin(); // Llama a la función del modelo
+
+		// Formatea los resultados para jQuery UI Autocomplete
+		$formatted_results = array();
+		foreach ($results as $row) {
+			$formatted_results[] = array(
+				'label' => $row->state, // Texto que se muestra en la lista
+				'value' => $row->id_origin // Valor que se asigna al campo
+			);
+		}
+
+		echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+	}
 
 	
 // FUNCTION UPLOAD_EXCEL ya no se utilizá este código
