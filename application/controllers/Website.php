@@ -3754,6 +3754,7 @@ class Website extends CI_Controller
 			echo json_encode(['container_type' => '']);
 		}
 	}
+	
 	public function get_platenumbers(){
         $term = $this->input->get('term'); // Obtén el término de búsqueda
 		$this->load->model('ADM');
@@ -3771,14 +3772,15 @@ class Website extends CI_Controller
         echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
     }
 
-    public function get_vehicletype_by_platenumber($platenumber){
-        $transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
-        if ($transport) {
-            echo json_encode(['vehicletype' => $transport->vehicletype]);
-        } else {
-            echo json_encode(['vehicletype' => '']);
-        }
-    }
+    public function get_vehicletype_by_platenumber($platenumber) {
+		$transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
+		if ($transport && isset($transport->vehicletype)) {
+			echo json_encode(['vehicletype' => (string) $transport->vehicletype]); // Convertir a string por seguridad
+		} else {
+			echo json_encode(['vehicletype' => '']);
+		}
+	}
+	
 
 
 	//Devuelve todos los origenes (El lugar)
