@@ -223,13 +223,13 @@
                                                             </td>
                                                             <?php if ($admin->admin_level_kode == 1) { ?>
                                                                 <td class="text-center action">
-                                                                   <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $row->id_main; ?>">
+                                                                    <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar2/<?php echo $row->id_main; ?>">
                                                                         <i class="icon wb-pencil"></i>
                                                                     </a>-->
-                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
-                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar2/'.$row->id_main); ?>"
+                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>"
+                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar2/' . $row->id_main); ?>"
                                                                         <?php if ($disable_edit[$row->id_main] ?? false) : ?>
-                                                                            onclick="alert('No es posible volver a generar registros por pallet porque ya existen.'); return false;"
+                                                                        onclick="alert('No es posible volver a generar registros por pallet porque ya existen.'); return false;"
                                                                         <?php endif; ?>>
                                                                         <i class="icon wb-pencil"></i>
                                                                     </a>
@@ -238,15 +238,15 @@
                                                                     <a class="text-danger" href="javascript:;" data-id="<?php echo $row->id_main; ?>" data-toggle="modal" data-target="#modal-konfirmasi" title="<?php echo $row->identification_number; ?>">
                                                                         <i class="icon wb-trash"></i>
                                                                     </a>
-                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>" 
-                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar/'.$row->id_main); ?>"
+                                                                    <a class="btn-update <?php echo ($disable_edit[$row->id_main] ?? false) ? 'disabled' : ''; ?>"
+                                                                        href="<?php echo ($disable_edit[$row->id_main] ?? false) ? '#' : site_url('website/arrival/editar/' . $row->id_main); ?>"
                                                                         <?php if ($disable_edit[$row->id_main] ?? false) : ?>
-                                                                            onclick="alert('No es posible agregar más productos a este arribo porque ya se ha generado los registros por pallet.'); return false;"
+                                                                        onclick="alert('No es posible agregar más productos a este arribo porque ya se ha generado los registros por pallet.'); return false;"
                                                                         <?php endif; ?>>
                                                                         <i class="icon wb-plus"></i>
                                                                     </a>
 
-                                                                   <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar/<?php echo $row->id_main; ?>">
+                                                                    <!-- <a class="btn-update" href="<?php echo site_url(); ?>website/arrival/editar/<?php echo $row->id_main; ?>">
                                                                         <i class="icon wb-plus"></i>
                                                                     </a>-->
                                                                 </td>
@@ -689,12 +689,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="container_number">Número de Contenedor</label>
-                                                            <select name="container_number" id="container_number" class="form-control">
-                                                                <option value="">Seleccione un número de contenedor</option>
-                                                                <?php foreach ($containers as $container) : ?>
-                                                                    <option value="<?= $container->container_number ?>"><?= $container->container_number ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                                                            <input type="text" name="container_number" id="container_number" class="form-control" placeholder="Escriba el número de contenedor">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="container_type">Tipo de Contenedor</label>
@@ -704,10 +699,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mt-2">
-                                                    <div class="form-group">
-                                                        <label for="id_origin">Origen</label>
-                                                        <input type="text" name="id_origin" id="id_origin" class="form-control" placeholder="Escriba el origen">
-                                                    </div>
+                                                        <div class="form-group">
+                                                            <label for="origin_name">Origen</label>
+                                                            <input type="text" name="origin_name" id="origin_name" class="form-control" placeholder="Escriba el origen">
+                                                            <input type="hidden" name="id_origin" id="id_origin">
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="id_maneuver">Tipo de maniobra</label>
                                                             <select name="id_maneuver" id="id_maneuver" class="form-control">
@@ -847,19 +843,19 @@
                                                                         <?php if (!empty($movements)): ?>
                                                                             <?php foreach ($movements as $movementss): ?>
                                                                                 <!-- Campo visible con el tipo de movimiento -->
-                                                                                <input type="text" step="any" class="form-control input-sm" 
-                                                                                    style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                                                                                <input type="text" step="any" class="form-control input-sm"
+                                                                                    style="padding: 5px; font-size: 12px; text-align: center; width: 150px;"
                                                                                     name="products[0][type_movements]" id="type_movements_0"
-                                                                                    value="<?= htmlspecialchars($movementss->type_movements) ?>" 
+                                                                                    value="<?= htmlspecialchars($movementss->type_movements) ?>"
                                                                                     required readonly />
 
                                                                                 <!-- Campo oculto con el ID del movimiento -->
-                                                                                <input type="hidden" name="products[0][id_type_movement]" 
+                                                                                <input type="hidden" name="products[0][id_type_movement]"
                                                                                     value="<?= htmlspecialchars($movementss->id_type_movement) ?>" />
                                                                             <?php endforeach; ?>
                                                                         <?php else: ?>
-                                                                            <input type="text" step="any" class="form-control input-sm" 
-                                                                                style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" 
+                                                                            <input type="text" step="any" class="form-control input-sm"
+                                                                                style="padding: 5px; font-size: 12px; text-align: center; width: 150px;"
                                                                                 name="products[0][type_movements]" id="type_movements_0"
                                                                                 value="Entrada" required readonly />
 
@@ -869,7 +865,7 @@
                                                                 </td>
 
 
-                                                              
+
 
                                                                 <td>
                                                                     <div class="form-group form-material">
@@ -979,7 +975,6 @@
         </button>
     </a>
     <script>
-
         let rowIndex = 1;
 
         function addProductRow() {
@@ -1100,7 +1095,6 @@
             const row = button.closest('tr');
             row.remove();
         }
-
     </script>
     <script>
         $(document).ready(function() {
@@ -1186,33 +1180,79 @@
         }
     </script>
 
-    
+    <!--Autocompletado Numero de contenedor -->
     <script>
-        document.getElementById('container_number').addEventListener('change', function() {
-            var containerNumber = this.value;
-            if (containerNumber) {
-                fetch('<?= site_url('Website/get_container_type_by_number/') ?>' + containerNumber)
-                    .then(response => response.json())
-                    .then(data => {
-                        var containerTypeSelect = document.getElementById('container_type');
-                        containerTypeSelect.innerHTML = ''; // Limpiar opciones anteriores
-                        if (data.container_type) {
-                            var option = document.createElement('option');
-                            option.value = data.container_type;
-                            option.text = data.container_type;
-                            containerTypeSelect.add(option);
-                        }
-                    });
-            } else {
-                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
-                document.getElementById('container_type').innerHTML = '<option value="">Seleccione un tipo de contenedor</option>';
+        $(document).ready(function() {
+            // Variable para almacenar todos los números de contenedor
+            var allContainers = [];
+
+            // Función para cargar todos los números de contenedor desde el servidor
+            function loadAllContainers() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_container_numbers') ?>", // URL para obtener todos los números de contenedor
+                    dataType: "json",
+                    success: function(data) {
+                        allContainers = data; // Almacena todos los números de contenedor
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los números de contenedor:", error);
+                    }
+                });
             }
+
+            // Cargar todos los números de contenedor al iniciar la página
+            loadAllContainers();
+
+            // Configurar el autocompletado
+            $("#container_number").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los números de contenedor basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredContainers = allContainers.filter(function(container) {
+                        return container.label.toLowerCase().includes(term);
+                    });
+                    response(filteredContainers); // Enviar los números de contenedor filtrados al autocompletado
+                },
+                minLength: 0, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#container_number").val(ui.item.label);
+
+                    // Obtener el tipo de contenedor basado en el número de contenedor seleccionado
+                    fetch('<?= site_url('Website/get_container_type_by_number/') ?>' + ui.item.label)
+                        .then(response => response.json())
+                        .then(data => {
+                            var containerTypeSelect = document.getElementById('container_type');
+                            containerTypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                            if (data.container_type) {
+                                var option = document.createElement('option');
+                                option.value = data.container_type;
+                                option.text = data.container_type;
+                                containerTypeSelect.add(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error al obtener el tipo de contenedor:", error);
+                        });
+
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#container_number").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
         });
     </script>
 
     <!--Autocompletado Placa -->
     <script>
-        $(document).ready(function() {            
+        $(document).ready(function() {
             // Configura el autocompletado para el campo #platenumber
             $("#platenumber").autocomplete({
                 source: function(request, response) {
@@ -1259,7 +1299,7 @@
                     // Si el campo de placa está vacío, limpia el campo de tipo de vehículo
                     $("#vehicletype").html('<option value="">Seleccione un tipo de unidad de transporte</option>');
                 }
-            });                          
+            });
         });
     </script>
 
@@ -1287,7 +1327,7 @@
             loadAllOrigins();
 
             // Configurar el autocompletado
-            $("#id_origin").autocomplete({
+            $("#origin_name").autocomplete({
                 source: function(request, response) {
                     // Filtrar los orígenes basados en lo que el usuario ha escrito
                     var term = request.term.toLowerCase();
@@ -1300,22 +1340,24 @@
                 focus: function(event, ui) {
                     // Evitar que el campo se complete automáticamente al navegar por las opciones
                     event.preventDefault();
+                    $("#origin_name").val(ui.item.label);
                 },
                 select: function(event, ui) {
                     // Cuando se selecciona una opción, completar el campo con el valor seleccionado
-                    $("#id_origin").val(ui.item.label);
+                    $("#origin_name").val(ui.item.label); // Mostrar el nombre del origen
+                    $("#id_origin").val(ui.item.value); // Almacenar el ID del origen en el campo oculto
                     return false;
                 }
             });
 
             // Mostrar todas las opciones al hacer clic en el campo
-            $("#id_origin").on("focus", function() {
+            $("#origin_name").on("focus", function() {
                 $(this).autocomplete("search", "");
             });
         });
     </script>
 
-    
+
 
     <script>
         /*function updateQuantityProductByPallet(index) {
@@ -1523,9 +1565,10 @@
                                                         <div class="form-group">
                                                             <label for="vehicletype">Tipo de Unidad / Transporte</label>
                                                             <select name="vehicletype" id="vehicletype" class="form-control">
-                                                            <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
-                                                                <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
-                                                            </option>                                                            </select>
+                                                                <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
+                                                                    <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
+                                                                </option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mt2">
@@ -1582,7 +1625,7 @@
                                                                 <th>Caducidad</th>
                                                                 <th>Nota</th>
                                                                 <th>Estatus</th>
-                                                               <!-- <th>Acciones</th>-->
+                                                                <!-- <th>Acciones</th>-->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -1687,8 +1730,8 @@
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
                                                                                 <input type="hidden"
-                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
-                                                                                value="<?= $product->id_type_movement ?>" /> 
+                                                                                    name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                    value="<?= $product->id_type_movement ?>" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -1713,7 +1756,7 @@
                                                                                 </select>
                                                                             </div>
                                                                         </td>
-                                                                       <!-- <td style="display: flex; gap: 5px;">
+                                                                        <!-- <td style="display: flex; gap: 5px;">
                                                                             <button type="button" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;" onclick="addProductRow()">Agregar Producto</button>
                                                                             <button type="button" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="removeProductRow(this)">Eliminar</button>
                                                                         </td>-->
@@ -2369,7 +2412,8 @@
                                                             <select name="vehicletype" id="vehicletype" class="form-control">
                                                                 <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
                                                                     <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
-                                                                </option>                                                              </select>
+                                                                </option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mt2">
@@ -2426,7 +2470,7 @@
                                                                 <th>Caducidad</th>
                                                                 <th>Nota</th>
                                                                 <th>Estatus</th>
-                                                               <!-- <th>Acciones</th>-->
+                                                                <!-- <th>Acciones</th>-->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -2530,8 +2574,8 @@
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
                                                                                 <input type="hidden"
-                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
-                                                                                value="<?= $product->id_type_movement ?>" />
+                                                                                    name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                    value="<?= $product->id_type_movement ?>" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -2556,7 +2600,7 @@
                                                                                 </select>
                                                                             </div>
                                                                         </td>
-                                                                       <!-- <td style="display: flex; gap: 5px;">
+                                                                        <!-- <td style="display: flex; gap: 5px;">
                                                                             <button type="button" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;" onclick="addProductRow()">Agregar Producto</button>
                                                                             <button type="button" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="removeProductRow(this)">Eliminar</button>
                                                                         </td>-->
@@ -2607,38 +2651,38 @@
                                             </div>
                                         </div>
                                     </div>
-                                   <!-- <div class="col-md-12 mt-5 ">
+                                    <!-- <div class="col-md-12 mt-5 ">
                                     <div class='button center mt-2 md-3'>
                                         <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Generar registros" id="validateButton2">
                                         <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
                                     </div>
                                 </div>-->
-                                <div class="col-md-12 mt-5">
-                                    <div class='button center mt-2 md-3'>
-                                        <input class="btn btn-success btn-sm" 
-                                            type="submit" 
-                                            name="simpan" 
-                                            value="Generar registros" 
-                                            id="validateButton2"
-                                            onclick="return confirmarGeneracion();">
-                                            
-                                        <input class="btn btn-danger btn-sm" 
-                                            type="reset" 
-                                            name="batal" 
-                                            value="Cancelar" 
-                                            onclick="location.href='<?php echo site_url(); ?>website/arrival/view'">
-                                    </div>
-                            </div>
+                                    <div class="col-md-12 mt-5">
+                                        <div class='button center mt-2 md-3'>
+                                            <input class="btn btn-success btn-sm"
+                                                type="submit"
+                                                name="simpan"
+                                                value="Generar registros"
+                                                id="validateButton2"
+                                                onclick="return confirmarGeneracion();">
 
-                            <script>
-                            function confirmarGeneracion() {
-                                return confirm("¿Seguro que quieres generar los registros por pallet? Una vez generado, ya no podrás agregar más productos al arribo.");
-                            }
-                            </script>
+                                            <input class="btn btn-danger btn-sm"
+                                                type="reset"
+                                                name="batal"
+                                                value="Cancelar"
+                                                onclick="location.href='<?php echo site_url(); ?>website/arrival/view'">
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        function confirmarGeneracion() {
+                                            return confirm("¿Seguro que quieres generar los registros por pallet? Una vez generado, ya no podrás agregar más productos al arribo.");
+                                        }
+                                    </script>
 
 
                                 </div>
-                               
+
                             </form>
                         </div>
                     </div>
@@ -3018,7 +3062,7 @@
             });
         });
 
-      
+
         function updateQuantityPallet(index) {
             const damagedPallets = parseFloat(document.getElementById(`damaged_pallets_${index}`).value) || 0;
             const quantityPallet = parseFloat(document.getElementById(`quantity_pallet_${index}`).value) || 0;
@@ -3058,7 +3102,7 @@
             actualizarStockOk(index);
         }
 
-      
+
 
         function actualizarStockOk(index) {
             const stockInicial = parseFloat(document.getElementById(`stock_${index}`).value) || 0;
@@ -3067,7 +3111,7 @@
             document.getElementById(`good_stock_${index}`).value = stockOk;
         }
     </script>
-   
+
 
     <!-- ================================================== END EDITAR2 ================================================== -->
 
@@ -3075,8 +3119,8 @@
 
 
 
- <!-- ================================================== EDITAR ================================================== -->
- <?php } elseif ($action == 'editar') { ?>
+    <!-- ================================================== EDITAR ================================================== -->
+<?php } elseif ($action == 'editar') { ?>
     <div class="page">
         <div class="page-title orange">
             <h3>
@@ -3236,7 +3280,7 @@
                                                         <thead class="thead-dark">
                                                             <tr>
                                                                 <!--<th>N.</th>-->
-                                                               <!-- <th>N_Sub</th>-->
+                                                                <!-- <th>N_Sub</th>-->
                                                                 <th>Nombre del producto</th>
                                                                 <th>Tipo de pallet</th>
                                                                 <th>Stock por pallet</th>
@@ -3258,7 +3302,7 @@
                                                             <?php if (isset($productss) && is_array($productss)) : ?>
                                                                 <?php foreach ($productss as $product) : ?>
                                                                     <tr>
-                    
+
                                                                         <td>
                                                                             <!-- Campo oculto para id_product -->
                                                                             <input type="hidden" name="products_update[<?php echo $index; ?>][id_product]" value="<?= $product->id_product ?>" />
@@ -3329,15 +3373,15 @@
                                                                                 <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products_update[<?php echo $index; ?>][damaged_stock]" value="<?php echo $product->damaged_stock; ?>" placeholder="Escribe el stock dañado" id="damaged_stock_<?php echo $index; ?>" oninput="actualizarStockOk(<?php echo $index; ?>); updateDamagedStock(<?php echo $index; ?>)" required />
                                                                             </div>
                                                                         </td>
-                                                                      
-                                            
+
+
                                                                         <td>
                                                                             <div class="form-group form-material">
                                                                                 <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products_update[<?php echo $index; ?>][type_movements]" value="<?php echo $product->type_movements; ?>" required readonly />
                                                                                 <input type="hidden"
-                                                                                id="id_type_movement_<?php echo $index; ?>"
-                                                                                name="products_update[<?php echo $index; ?>][id_type_movement]"
-                                                                                value="<?= $product->id_type_movement ?>" />
+                                                                                    id="id_type_movement_<?php echo $index; ?>"
+                                                                                    name="products_update[<?php echo $index; ?>][id_type_movement]"
+                                                                                    value="<?= $product->id_type_movement ?>" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -3418,12 +3462,12 @@
                                             <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Actualizar datos" id="validateButton2">
                                             <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/arrival/view'" />
                                         </div>
-                                </div>
+                                    </div>
                                 </div>
                             </form>
-                           
+
                         </div>
-                       
+
                     </div>
 
                 </div>

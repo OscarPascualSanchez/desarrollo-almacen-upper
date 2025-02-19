@@ -1662,13 +1662,21 @@ public function get_container_type($id_container)
     return $query->row();
 }
 
-public function get_container_type_by_number($container_number) {
-    $this->db->select('container_type');
-    $this->db->from('container');
-    $this->db->where('container_number', $container_number);
-    $query = $this->db->get();
-    return $query->row()->container_type;
-}
+	public function get_container_type_by_number($container_number) {
+		$this->db->select('container_type');
+		$this->db->from('container');
+		$this->db->where('container_number', $container_number);
+		$query = $this->db->get();
+		return $query->row()->container_type;
+	}
+
+	//Obtener todos los números de contenedor
+	public function get_all_container_numbers(){
+		$this->db->select('container_number');
+		$this->db->from('container');
+		$query = $this->db->get();
+		return $query->result(); // Devuelve todos los resultados como un array de objetos
+	}
 
 
 	//CONFIGURATION TABEL PRODUCTS

@@ -3743,7 +3743,23 @@ class Website extends CI_Controller
 		echo json_encode($products);
 	}
 
+	//Devuelve todos los números de contenedor
 
+	public function get_all_container_numbers(){
+		$this->load->model('M_admin');
+		$results = $this->M_admin->get_all_container_numbers(); // Llama a la función del modelo
+
+		// Formatea los resultados para jQuery UI Autocomplete
+		$formatted_results = array();
+		foreach ($results as $row) {
+			$formatted_results[] = array(
+				'label' => $row->container_number, // Texto que se muestra en la lista
+				'value' => $row->container_number // Valor que se asigna al campo
+			);
+		}
+
+		echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+	}
 
 	public function get_container_type_by_number($container_number)
 	{
