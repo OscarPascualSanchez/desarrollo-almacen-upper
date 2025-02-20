@@ -1628,16 +1628,16 @@ public function get_only_entrada_type_movement($select = 'id_type_movement, type
 	}
 
 	public function get_id_container_by_number($container_number)
-{
+	{
     $this->db->select('id_container');
     $this->db->from('container');
     $this->db->where('container_number', $container_number);
     $query = $this->db->get();
     return $query->row()->id_container;
-}
+	}
 
 
-public function get_container_type($id_container)
+	public function get_container_type($id_container)
 	{
 		$this->db->select('container_type');
 		$this->db->from('container');
@@ -1654,21 +1654,28 @@ public function get_container_type($id_container)
 	
 
 	public function get_container_by_number($container_number)
-{
+	{
     $this->db->select('id_container, container_type');
     $this->db->from('container');
     $this->db->where('container_number', $container_number);
     $query = $this->db->get();
     return $query->row();
-}
+	}
 
 	public function get_container_type_by_number($container_number) {
 		$this->db->select('container_type');
 		$this->db->from('container');
 		$this->db->where('container_number', $container_number);
 		$query = $this->db->get();
-		return $query->row()->container_type;
+	
+		if ($query->num_rows() > 0) {
+			return $query->row()->container_type; // Devuelve el tipo de contenedor
+		} else {
+			return null; // Devuelve null si no hay resultados
+		}
 	}
+
+	
 
 	//Obtener todos los números de contenedor
 	public function get_all_container_numbers(){
