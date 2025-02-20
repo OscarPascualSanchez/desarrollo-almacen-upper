@@ -4292,7 +4292,8 @@ public function details($identification_number = '', $page = 1) {
 			
 										$where = [
 											'id_product' => $product['id_product'],
-											'identification_number' => $data['identification_number']
+											'identification_number' => $data['identification_number'],
+											'id_arrivalnew'   => $product ['id_arrivalnew']
 										];
 								
 										$this->db->select('id_position, type_movements');

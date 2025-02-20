@@ -1102,6 +1102,11 @@
                 
               
             
+                <input class="form-control input-sm" type="hidden" name="products_insert[${index}][id_main]" id="id_main_${index}" value="${idArrival}" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
+                    
+                   
+                <input class="form-control input-sm" type="hidden" name="products_insert[${index}][id_arrival]" id="id_arrival_${index}" value="${idArrival}" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
+                   
                 <td>
                     <div class="form-group form-material">
                         <input class="form-control input-sm" type="text" name="products_insert[${index}][id_movement]" id="id_movement_${index}" value="${idMovement}" style="padding: 5px; font-size: 12px; text-align: center; width: 80px;" readonly />
