@@ -3097,7 +3097,7 @@ class Website extends CI_Controller
 							'id_supplier' => validasi_sql($data['id_supplier']),
 							'id_container' => validasi_sql($data['id_container']),
 							'container_number' => validasi_sql($data['container_number']),
-							'container_type' => validasi_sql($data['container_type']),
+							'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 							'id_origin' => validasi_sql($data['id_origin']),
 							'state' => validasi_sql($data['state']),
 							'id_maneuver' => validasi_sql($data['id_maneuver']),
@@ -3105,7 +3105,7 @@ class Website extends CI_Controller
 							'event_date' => validasi_sql($data['event_date']),
 							'id_transport' => validasi_sql($data['id_transport']),
 							'platenumber' => validasi_sql($data['platenumber']),
-							'vehicletype' => validasi_sql($data['vehicletype']),
+							'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 							'name_driver' => validasi_sql($data['name_driver']),
 							'id_driver' => validasi_sql($data['id_driver']),
 							'arrival_time' => validasi_sql($data['arrival_time']),
@@ -3335,7 +3335,7 @@ class Website extends CI_Controller
 									'event_type' => validasi_sql($data['event_type']),
 									'id_container' => validasi_sql($data['id_container']),
 									'container_number' => validasi_sql($data['container_number']),
-									'container_type' => validasi_sql($data['container_type']),
+									'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 									'state' => validasi_sql($data['state']),
 									'id_origin' => validasi_sql($data['id_origin']),
 									'type_maneuver' => validasi_sql($data['type_maneuver']),
@@ -3345,7 +3345,7 @@ class Website extends CI_Controller
 									'type_platform' => validasi_sql($newgenerated['type_platform']),
 									'id_transport' => validasi_sql($data['id_transport']),
 									'platenumber' =>validasi_sql($data['platenumber']),
-									'vehicletype' => validasi_sql($data['vehicletype']),
+									'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 									'name_driver' => validasi_sql($data['name_driver']),
 									'id_driver' => validasi_sql($data['id_driver']),
 									'stock' => validasi_sql($newgenerated['stock']),
@@ -3396,7 +3396,7 @@ class Website extends CI_Controller
 							'id_supplier' => validasi_sql($data['id_supplier']),
 							'id_container' => validasi_sql($data['id_container']),
 							'container_number' => validasi_sql($data['container_number']),
-							'container_type' => validasi_sql($data['container_type']),
+							'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 							'id_origin' => validasi_sql($data['id_origin']),
 							'state' => validasi_sql($data['state']),
 							'id_maneuver' => validasi_sql($data['id_maneuver']),
@@ -3404,7 +3404,7 @@ class Website extends CI_Controller
 							'event_date' => validasi_sql($data['event_date']),
 							'id_transport' => validasi_sql($data['id_transport']),
 							'platenumber' => validasi_sql($data['platenumber']),
-							'vehicletype' => validasi_sql($data['vehicletype']),
+							'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 							'name_driver' => validasi_sql($data['name_driver']),
 							'id_driver' => validasi_sql($data['id_driver']),
 							'arrival_time' => validasi_sql($data['arrival_time']),
@@ -3520,7 +3520,7 @@ class Website extends CI_Controller
 							'id_supplier' => validasi_sql($data['id_supplier']),
 							'id_container' => validasi_sql($data['id_container']),
 							'container_number' => validasi_sql($data['container_number']),
-							'container_type' => validasi_sql($data['container_type']),
+							'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 							'id_origin' => validasi_sql($data['id_origin']),
 							'state' => validasi_sql($data['state']),
 							'id_maneuver' => validasi_sql($data['id_maneuver']),
@@ -3528,7 +3528,7 @@ class Website extends CI_Controller
 							'event_date' => validasi_sql($data['event_date']),
 							'id_transport' => validasi_sql($data['id_transport']),
 							'platenumber' => validasi_sql($data['platenumber']),
-							'vehicletype' => validasi_sql($data['vehicletype']),
+							'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 							'name_driver' => validasi_sql($data['name_driver']),
 							'id_driver' => validasi_sql($data['id_driver']),
 							'arrival_time' => validasi_sql($data['arrival_time']),
@@ -3538,6 +3538,8 @@ class Website extends CI_Controller
 							'updated_by' => validasi_sql($data['updated_by']),
 							'updated_date' => validasi_sql($data['updated_date'])
 						);
+
+						
 
 						// Actualiza todos los registros que comparten el mismo identification_number
 						$this->db->where('identification_number', $data['identification_number']);
@@ -3626,7 +3628,7 @@ class Website extends CI_Controller
 										'event_type' => validasi_sql($data['event_type']),
 										'id_container' => validasi_sql($data['id_container']),
 										'container_number' => validasi_sql($data['container_number']),
-										'container_type' => validasi_sql($data['container_type']),
+										'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 										'state' => validasi_sql($data['state']),
 										'id_origin' => validasi_sql($data['id_origin']),
 										'type_maneuver' => validasi_sql($data['type_maneuver']),
@@ -3638,7 +3640,7 @@ class Website extends CI_Controller
 										//'type_platform' => $this->ADM->get_type_platform($product['id_platform'])->type_platform,
 										'id_transport' => validasi_sql($data['id_transport']),
 										'platenumber' => validasi_sql($data['platenumber']),
-										'vehicletype' => validasi_sql($data['vehicletype']),
+										'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 										'name_driver' => validasi_sql($data['name_driver']),
 										'id_driver' => validasi_sql($data['id_driver']),
 										'stock' => validasi_sql($new_product['stock']),
@@ -3748,24 +3750,27 @@ class Website extends CI_Controller
 	public function get_all_container_numbers(){
 		$this->load->model('M_admin');
 		$results = $this->M_admin->get_all_container_numbers(); // Llama a la función del modelo
-
-		// Formatea los resultados para jQuery UI Autocomplete
-		$formatted_results = array();
-		foreach ($results as $row) {
-			$formatted_results[] = array(
-				'label' => $row->container_number, // Texto que se muestra en la lista
-				'value' => $row->container_number // Valor que se asigna al campo
-			);
+	
+		if ($results) {
+			// Formatea los resultados para jQuery UI Autocomplete
+			$formatted_results = array();
+			foreach ($results as $row) {
+				$formatted_results[] = array(
+					'label' => $row->container_number, // Texto que se muestra en la lista
+					'value' => $row->container_number // Valor que se asigna al campo
+				);
+			}
+	
+			echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+		} else {
+			echo json_encode([]); // Devuelve un array vacío si no hay resultados
 		}
-
-		echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
 	}
 
-	public function get_container_type_by_number($container_number)
-	{
-		$container = $this->ADM->get_container_by_number($container_number);
+	public function get_container_type_by_number($container_number) {
+		$container = $this->ADM->get_container_type_by_number($container_number);
 		if ($container) {
-			echo json_encode(['container_type' => $container->container_type]);
+			echo json_encode(['container_type' => $container]);
 		} else {
 			echo json_encode(['container_type' => '']);
 		}
@@ -3788,10 +3793,10 @@ class Website extends CI_Controller
         echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
     }
 
-    public function get_vehicletype_by_platenumber($platenumber) {
+	public function get_vehicletype_by_platenumber($platenumber) {
 		$transport = $this->ADM->get_vehicletype_by_platenumber($platenumber);
 		if ($transport && isset($transport->vehicletype)) {
-			echo json_encode(['vehicletype' => (string) $transport->vehicletype]); // Convertir a string por seguridad
+			echo json_encode(['vehicletype' => $transport->vehicletype]);
 		} else {
 			echo json_encode(['vehicletype' => '']);
 		}
@@ -3803,17 +3808,21 @@ class Website extends CI_Controller
 	public function get_all_origins(){
 		$this->load->model('ADM');
 		$results = $this->ADM->get_all_origin(); // Llama a la función del modelo
-
-		// Formatea los resultados para jQuery UI Autocomplete
-		$formatted_results = array();
-		foreach ($results as $row) {
-			$formatted_results[] = array(
-				'label' => $row->state, // Texto que se muestra en la lista
-				'value' => $row->id_origin // Valor que se asigna al campo
-			);
+	
+		if ($results) {
+			// Formatea los resultados para jQuery UI Autocomplete
+			$formatted_results = array();
+			foreach ($results as $row) {
+				$formatted_results[] = array(
+					'label' => $row->state, // Texto que se muestra en la lista
+					'value' => $row->id_origin // Valor que se asigna al campo
+				);
+			}
+	
+			echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+		} else {
+			echo json_encode([]); // Devuelve un array vacío si no hay resultados
 		}
-
-		echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
 	}
 
 	
