@@ -4267,7 +4267,7 @@ public function details($identification_number = '', $page = 1) {
 										'damaged_stock' => validasi_sql($product['damaged_stock']),
 										'good_pallets' => validasi_sql($product['good_pallets']),
 										'good_stock' => validasi_sql($product['good_stock']),
-										'available_pallets' => validasi_sql($product['available_pallets']),
+										
 										'id_type_movement' => validasi_sql($product['id_type_movement']),
 										'type_movements' => $this->ADM->get_type_type_movement($product['id_type_movement']),
 										'movement_date' => validasi_sql($product['movement_date']),
@@ -4276,7 +4276,7 @@ public function details($identification_number = '', $page = 1) {
 										'column_location' => validasi_sql($product['column_location']),
 										'rack_number' => validasi_sql($product['rack_number']),
 										'level' => validasi_sql($product['level']),
-										//'expiration_date' => validasi_sql($product['expiration_date']),
+										'expiration_date' => validasi_sql($product['expiration_date']),
 										'note' => validasi_sql($product['note']),
 										'status' => validasi_sql($product['status']),
 										//'updated_by' => validasi_sql($data['admin']->admin_user),
@@ -4386,7 +4386,7 @@ public function details($identification_number = '', $page = 1) {
 										'event_type' => validasi_sql($data['event_type']),
 										'id_container' => validasi_sql($data['id_container']),
 										'container_number' => validasi_sql($data['container_number']),
-										'container_type' => validasi_sql($data['container_type']),
+										'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 										'state' => validasi_sql($data['state']),
 										'id_origin' => validasi_sql($data['id_origin']),
 										'type_maneuver' => validasi_sql($data['type_maneuver']),
@@ -4398,7 +4398,7 @@ public function details($identification_number = '', $page = 1) {
 										//'type_platform' => $this->ADM->get_type_platform($product['id_platform'])->type_platform,
 										'id_transport' => validasi_sql($data['id_transport']),
 										'platenumber' => validasi_sql($data['platenumber']),
-										'vehicletype' => validasi_sql($data['vehicletype']),
+										'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 										'name_driver' => validasi_sql($data['name_driver']),
 										'id_driver' => validasi_sql($data['id_driver']),
 										'stock' => validasi_sql($new_product['stock']),
@@ -4409,7 +4409,7 @@ public function details($identification_number = '', $page = 1) {
 										'damaged_stock' => validasi_sql($new_product['damaged_stock']),
 										'good_pallets' => validasi_sql($new_product['good_pallets']),
 										'good_stock' => validasi_sql($new_product['good_stock']),
-										'available_pallets' => validasi_sql($new_product['available_pallets']),
+										
 										'arrival_time' => validasi_sql($data['arrival_time']),
 										'maneuver_start' => validasi_sql($data['maneuver_start']),
 										'id_type_movement' => validasi_sql($new_product['id_type_movement']),
@@ -4611,7 +4611,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 								  'event_type' => validasi_sql($data['event_type']),
 								  'id_container' => validasi_sql($data['id_container']),
 								  'container_number' => validasi_sql($data['container_number']),
-								  'container_type' => validasi_sql($data['container_type']),
+								  'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 								  'state' => validasi_sql($data['state']),
 								  'id_destination' => validasi_sql($data['id_destination']),
 								  'type_maneuver' => validasi_sql($data['type_maneuver']),
@@ -4623,7 +4623,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 								  //'type_platform' => $this->ADM->get_type_platform($product['id_platform'])->type_platform,
 								  'id_transport' => validasi_sql($data['id_transport']),
 								  'platenumber' => validasi_sql($data['platenumber']),
-								  'vehicletype' => validasi_sql($data['vehicletype']),
+								  'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 								  'name_driver' => validasi_sql($data['name_driver']),
 								  'id_driver' => validasi_sql($data['id_driver']),
 								  'stock' => validasi_sql($product['stock']),
@@ -4633,7 +4633,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 								  'damaged_stock' => validasi_sql($product['damaged_stock']),
 								  'good_pallets' => validasi_sql($product['good_pallets']),
 								  'good_stock' => validasi_sql($product['good_stock']),
-								  'available_pallets' => validasi_sql($product['available_pallets']),
+								
 								  'arrival_time' => validasi_sql($data['arrival_time']),
 								  'maneuver_start' => validasi_sql($data['maneuver_start']),
 								  'expiration_date' => validasi_sql($product['expiration_date']),
@@ -4725,7 +4725,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 					$products['damaged_stock']	          = ($this->input->post('damaged_stock')) ? $this->input->post('damaged_stock') : $arrival->damaged_stock;
 					$products['good_pallets']	          = ($this->input->post('good_pallets')) ? $this->input->post('good_pallets') : $arrival->good_pallets;
 					$products['good_stock']	              = ($this->input->post('good_stock')) ? $this->input->post('good_stock') : $arrival->good_stock;
-					$products['available_pallets']	      = ($this->input->post('available_pallets')) ? $this->input->post('available_pallets') : $arrival->available_pallets;
+					
 					$products['expiration_date']	      = ($this->input->post('expiration_date')) ? $this->input->post('expiration_date') : $arrival->expiration_date;
 					// Datos adicionales del producto
 					$data['arrival_time']  = $this->input->post('arrival_time') ?: $arrival->arrival_time;
@@ -4747,7 +4747,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 							'id_supplier' => validasi_sql($data['id_supplier']),
 							'id_container' => validasi_sql($data['id_container']),
 							'container_number' => validasi_sql($data['container_number']),
-							'container_type' => validasi_sql($data['container_type']),
+							'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 							'id_origin' => validasi_sql($data['id_origin']),
 							'state' => validasi_sql($data['state']),
 							'id_maneuver' => validasi_sql($data['id_maneuver']),
@@ -4755,7 +4755,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 							'event_date' => validasi_sql($data['event_date']),
 							'id_transport' => validasi_sql($data['id_transport']),
 							'platenumber' => validasi_sql($data['platenumber']),
-							'vehicletype' => validasi_sql($data['vehicletype']),
+							'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 							'name_driver' => validasi_sql($data['name_driver']),
 							'id_driver' => validasi_sql($data['id_driver']),
 							'arrival_time' => validasi_sql($data['arrival_time']),
@@ -4796,7 +4796,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 										'damaged_stock' => validasi_sql($product['damaged_stock']),
 										'good_pallets' => validasi_sql($product['good_pallets']),
 										'good_stock' => validasi_sql($product['good_stock']),
-										'available_pallets' => validasi_sql($product['available_pallets']),
+										
 										'expiration_date' => validasi_sql($product['expiration_date']),
 										'note' => validasi_sql($product['note']),
 										'status' => validasi_sql($product['status']),
@@ -4854,7 +4854,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 										'event_type' => validasi_sql($data['event_type']),
 										'id_container' => validasi_sql($data['id_container']),
 										'container_number' => validasi_sql($data['container_number']),
-										'container_type' => validasi_sql($data['container_type']),
+										'container_type' => validasi_sql(is_object($data['container_type']) ? $data['container_type']->container_type : $data['container_type']),
 										'state' => validasi_sql($data['state']),
 										'id_origin' => validasi_sql($data['id_origin']),
 										'type_maneuver' => validasi_sql($data['type_maneuver']),
@@ -4866,7 +4866,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 										//'type_platform' => $this->ADM->get_type_platform($product['id_platform'])->type_platform,
 										'id_transport' => validasi_sql($data['id_transport']),
 										'platenumber' => validasi_sql($data['platenumber']),
-										'vehicletype' => validasi_sql($data['vehicletype']),
+										'vehicletype' => validasi_sql(is_object($data['vehicletype']) ? $data['vehicletype']->vehicletype : $data['vehicletype']),
 										'name_driver' => validasi_sql($data['name_driver']),
 										'id_driver' => validasi_sql($data['id_driver']),
 										'stock' => validasi_sql($new_product['stock']),
@@ -4876,7 +4876,7 @@ public function boarding($filter1 = '', $filter2 = '', $filter3 = '')
 										'damaged_stock' => validasi_sql($new_product['damaged_stock']),
 										'good_pallets' => validasi_sql($new_product['good_pallets']),
 										'good_stock' => validasi_sql($new_product['good_stock']),
-										'available_pallets' => validasi_sql($new_product['available_pallets']),
+										
 										'arrival_time' => validasi_sql($data['arrival_time']),
 										'maneuver_start' => validasi_sql($data['maneuver_start']),
 										'expiration_date' => validasi_sql($new_product['expiration_date']),

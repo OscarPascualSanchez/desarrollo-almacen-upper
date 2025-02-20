@@ -189,9 +189,7 @@
                                                                 <td>
                                                                     <?php echo $row->good_stock; ?>
                                                                 </td>
-                                                                <td>
-                                                                    <?php echo $row->available_pallets; ?>
-                                                                </td>
+                                                               
                                                                 <td>
                                                                     <?php echo $row->expiration_date; ?>
                                                                 </td>
@@ -424,9 +422,10 @@
                                                             <div class="form-group">
                                                                 <label for="vehicletype">Tipo de Unidad / Transporte</label>
                                                                 <select name="vehicletype" id="vehicletype" class="form-control" readonly>
-                                                                <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
-                                                                <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
-                                                                </option>                                                                </select>
+                                                                    <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars( $vehicletype->vehicletype) : '' ?>" selected>
+                                                                    <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>   
+                                                                    </option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 mt2">
@@ -1175,11 +1174,7 @@
                         <input type="number" class="form-control input-sm" name="products_insert[${index}][good_stock]" id="good_stock_${index}" data-id-arrival="${idArrival}" data-original-good-stock="good_stock_${index}" data-id-movement="${idMovement}" data-product-id-movement="<?php echo $product->id_movement; ?>" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" placeholder="Escribe el stock OK"  required readonly />
                     </div>
                 </td>
-                <td>
-                    <div class="form-group form-material">
-                        <input type="number" class="form-control input-sm" name="products_insert[${index}][available_pallets]" id="available_pallets_${index}" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" placeholder="Escribe la cantidad de pallets disponibles" required />
-                    </div>
-                </td>
+               
                 <td>
                     <input type="hidden" name="products_insert[${index}][id_type_movement]" />
                         <div class="form-group">
@@ -1426,9 +1421,6 @@
             });
         </script>
 
-
-
-
         <script>
             $(document).ready(function() {
                 // Filtrar productos al cargar la página para las filas existentes
@@ -1583,7 +1575,7 @@
             document.getElementById('platenumber').addEventListener('change', function() {
                 var platenumber = this.value;
                 if (platenumber) {
-                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
+                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber1/') ?>' + platenumber)
                         .then(response => response.json())
                         .then(data => {
                             var vehicletypeSelect = document.getElementById('vehicletype');
@@ -1725,8 +1717,10 @@
                     if (stockInicial > stockPrincipal) {
                         alert("El stock calculado excede el stock del registro principal.");
                         // Revertir los valores
-                        document.querySelector(`input[name="products_update[${index}][quantity_pallet]"], input[name="products_insert[${index}][quantity_pallet]"]`).value = inputStockInicial.dataset.originalQuantityPallet || quantityPallet;
-                        document.querySelector(`input[name="products_update[${index}][quantity_product_pallet]"], input[name="products_insert[${index}][quantity_product_pallet]"]`).value = inputStockInicial.dataset.originalQuantityProductPallet || quantityProductPallet;
+                        document.querySelector(`input[name="products_update[${index}][quantity_pallet]"]`).value = inputStockInicial.dataset.originalQuantityPallet || quantityPallet;
+                        document.querySelector(`input[name="products_update[${index}][quantity_product_pallet]"]`).value = inputStockInicial.dataset.originalQuantityProductPallet || quantityProductPallet;
+                        document.querySelector(`input[name="products_insert[${index}][quantity_pallet]"]`).value = 0;
+                        document.querySelector(`input[name="products_insert[${index}][quantity_product_pallet]"]`).value = 0;
                         return;
 
                     }
@@ -1738,7 +1732,7 @@
 
                 // Mantener otras actualizaciones y cálculos
                 // actualizarPalletsOk(index, esSubregistro);
-                // actualizarStockOk(index, esSubregistro);
+                actualizarStockOk(index, esSubregistro);
                 actualizarStockPrincipal(index, esSubregistro);
                 actualizarQuantityPalletPrincipal(index);
                 actualizarStockOkPrincipal(index);
