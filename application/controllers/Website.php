@@ -3825,6 +3825,27 @@ class Website extends CI_Controller
 		}
 	}
 
+	//Devuelve todos los conductores
+	public function get_all_drivers(){
+		$this->load->model('ADM');
+		$results = $this->ADM->get_all_driver(); // Llama a la función del modelo
+	
+		if ($results) {
+			// Formatea los resultados para jQuery UI Autocomplete
+			$formatted_results = array();
+			foreach ($results as $row) {
+				$formatted_results[] = array(
+					'label' => $row->name_driver, // Texto que se muestra en la lista
+					'value' => $row->id_driver // Valor que se asigna al campo
+				);
+			}
+	
+			echo json_encode($formatted_results); // Devuelve los resultados en formato JSON
+		} else {
+			echo json_encode([]); // Devuelve un array vacío si no hay resultados
+		}
+	}
+
 	
 // FUNCTION UPLOAD_EXCEL ya no se utilizá este código
 public function upload_excel() {
