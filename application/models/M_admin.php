@@ -2082,6 +2082,7 @@ public function get_only_entrada_type_movement($select = 'id_type_movement, type
 		return $data;
 	}
 
+	//Obtener todos los conductores de la base de datos
 	public function get_all_driver($select = 'id_driver, name_driver', $where = array())
 	{
 		$data = array();
@@ -2105,7 +2106,7 @@ public function get_only_entrada_type_movement($select = 'id_type_movement, type
 		$Q->free_result();
 		return $data;
 	}
-
+	
 	public function get_name_driver($id_driver)
 	{
 		$this->db->select('name_driver');
