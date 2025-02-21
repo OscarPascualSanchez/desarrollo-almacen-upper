@@ -703,15 +703,39 @@
                                                             <label for="origin_name">Origen</label>
                                                             <input type="text" name="origin_name" id="origin_name" class="form-control" placeholder="Escriba el origen">
                                                             <input type="hidden" name="id_origin" id="id_origin">
-                                                        </div>
+                                                        </div>                                                        
                                                         <div class="form-group">
                                                             <label for="id_maneuver">Tipo de maniobra</label>
-                                                            <select name="id_maneuver" id="id_maneuver" class="form-control">
-                                                                <option value="">Seleccione el tipo de maniobra</option>
-                                                                <?php foreach ($maneuvers as $maneuver) : ?>
-                                                                    <option value="<?= $maneuver->id_maneuver ?>"><?= $maneuver->type_maneuver ?></option>
-                                                                <?php endforeach; ?>
+                                                            <select name="id_maneuver" id="id_maneuver" class="form-control" disabled>
+                                                                <?php
+                                                                // Si la acción es 'tambah', mostrar solo "Descarga"
+                                                                if ($action == 'tambah') {
+                                                                    
+                                                                    // Buscar la maniobra de tipo "Descarga" (insensible a mayúsculas/minúsculas)
+                                                                    $descargaManeuver = array_filter($maneuvers, function($maneuver) {
+                                                                        return strtolower($maneuver->type_maneuver) == strtolower('Descarga');
+                                                                    });
+
+                                                                    // Si se encontró la maniobra "Descarga", mostrarla como única opción
+                                                                    if (!empty($descargaManeuver)) {
+                                                                        $descargaManeuver = reset($descargaManeuver); // Obtener el primer elemento del array
+                                                                        ?>
+                                                                        <option value="<?= $descargaManeuver->id_maneuver ?>" selected>
+                                                                            <?= $descargaManeuver->type_maneuver ?>
+                                                                        </option>
+                                                                        <?php
+                                                                    }
+                                                                } else {
+                                                                    // Si no es 'tambah', mostrar todas las opciones
+                                                                    foreach ($maneuvers as $maneuver) : ?>
+                                                                        <option value="<?= $maneuver->id_maneuver ?>">
+                                                                            <?= $maneuver->type_maneuver ?>
+                                                                        </option>
+                                                                    <?php endforeach;
+                                                                }
+                                                                ?>
                                                             </select>
+                                                            <input type="hidden" name="id_maneuver" value="<?= $descargaManeuver->id_maneuver ?>">
                                                         </div>
                                                         <div class="form-group form-material">
                                                             <label class="control-label" for="inputDate">Fecha de evento</label>
