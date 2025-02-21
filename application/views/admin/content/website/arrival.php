@@ -1023,10 +1023,30 @@
                 <input type="number" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" name="products[${rowIndex}][damaged_stock]" placeholder="Escribe el stock dañado" id="damaged_stock_${rowIndex}" oninput="actualizarStockOk(${rowIndex}); updateDamagedStock(${rowIndex})" value="0" required readonly />
             </div>
         </td>
-         <td>
-            <div class="form-group form-material">
-                <input type="text" step="any" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 150px;" name="products[${rowIndex}][type_movements]" id="type_movements_${rowIndex}" value="Entrada" required readonly />
-            </div>
+        <td>
+                <div class="form-group form-material">
+                    <?php if (!empty($movements)): ?>
+                        <?php foreach ($movements as $movementss): ?>
+                        <!-- Campo visible con el tipo de movimiento -->
+                        <input type="text" step="any" class="form-control input-sm"
+                        style="padding: 5px; font-size: 12px; text-align: center; width: 150px;"
+                        name="products[${rowIndex}][type_movements]" id="type_movements_${rowIndex}"
+                        value="<?= htmlspecialchars($movementss->type_movements) ?>"
+                        required readonly />
+
+                        <!-- Campo oculto con el ID del movimiento -->
+                        <input type="hidden" name="products[${rowIndex}][id_type_movement]"
+                        value="<?= htmlspecialchars($movementss->id_type_movement) ?>" />
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <input type="text" step="any" class="form-control input-sm"
+                        style="padding: 5px; font-size: 12px; text-align: center; width: 150px;"
+                        name="products[${rowIndex}][type_movements]" id="type_movements_${rowIndex}"
+                        value="Entrada" required readonly />
+
+                        <input type="hidden" name="products[${rowIndex}][id_type_movement]" value="1" />
+                    <?php endif; ?>
+                </div>
         </td>
    
         <td>
