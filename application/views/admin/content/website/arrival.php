@@ -730,14 +730,10 @@
                                                     </div>
                                                     <div class="col-md-4 mt-2">
                                                         <div class="form-group">
-                                                            <label for="id_driver">Conductor</label>
-                                                            <select name="id_driver" id="id_driver" class="form-control">
-                                                                <option value="">Seleccione el conductor</option>
-                                                                <?php foreach ($drivers as $driver) : ?>
-                                                                    <option value="<?= $driver->id_driver ?>"><?= $driver->name_driver ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
+                                                            <label for="name_cond">Conductor</label>
+                                                            <input type="text" name="name_cond" id="name_cond" class="form-control" placeholder="Escriba el conductor">
+                                                            <input type="hidden" name="id_driver" id="id_driver">
+                                                        </div>                                                        
                                                         <div class="form-group">
                                                             <label class="control-label" for="inputTime">Hora de llegada</label>
                                                             <input type="time" class="form-control input-sm" id="arrival_time" name="arrival_time" placeholder="Escribe la hora de llegada" required />
@@ -1377,6 +1373,59 @@
         });
     </script>
 
+    <!--Autocompletado Conductor -->
+    <script>
+        $(document).ready(function() {
+            // Variable para almacenar todos los conductores
+            var allDrivers = [];
+
+            // Función para cargar todos los conductores desde el servidor
+            function loadAllDrivers() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_drivers') ?>", // URL para obtener todos los conductores
+                    dataType: "json",
+                    success: function(data) {
+                        allDrivers = data; // Almacena todos los conductores
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los conductores:", error);
+                    }
+                });
+            }
+
+            // Cargar todos los conductores al iniciar la página
+            loadAllDrivers();
+
+            // Configurar el autocompletado
+            $("#name_cond").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los conductores basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredDrivers = allDrivers.filter(function(driver) {
+                        return driver.label.toLowerCase().includes(term);
+                    });
+                    response(filteredDrivers); // Enviar los conductores filtrados al autocompletado
+                },
+                minLength: 0, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                    $("#name_cond").val(ui.item.label);
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#name_cond").val(ui.item.label); // Mostrar el nombre del conductor
+                    $("#id_driver").val(ui.item.value); // Almacenar el ID del conductor en el campo oculto
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#name_cond").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
+        });
+    </script>
 
 
     <script>
