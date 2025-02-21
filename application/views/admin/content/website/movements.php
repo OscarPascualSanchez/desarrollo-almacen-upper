@@ -622,7 +622,7 @@
                                                                             <td>
                                                                                 <div class="col-md-3 mt-2">
                                                                                     <div class="form-group form-material">
-                                                                                        <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_<?php echo $index; ?>" name="products_update[<?php echo $index; ?>][movement_date]" value="<?php echo $product->movement_date; ?>" readonly>
+                                                                                        <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_<?php echo $index; ?>" name="products_update[<?php echo $index; ?>][movement_date]" value="<?php echo $product->movement_date; ?>" >
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -719,28 +719,7 @@
                                                                 <?php endif; ?>
                                                                 <!-- Select -->
                                                                 <script>
-                                                                    // Función para actualizar el campo de fecha y hora
-                                                                    function updateDateTimeField(selectElement, dateFieldId) {
-                                                                        const dateField = document.getElementById(dateFieldId);
-
-                                                                        if (selectElement.value !== "") {
-                                                                            const now = new Date();
-                                                                            const formattedDateTime = now.getFullYear() + '-' +
-                                                                                ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
-                                                                                ('0' + now.getDate()).slice(-2) + 'T' +
-                                                                                ('0' + now.getHours()).slice(-2) + ':' +
-                                                                                ('0' + now.getMinutes()).slice(-2);
-                                                                            dateField.value = formattedDateTime;
-
-                                                                            // Asignar posición
-                                                                            assignPosition(selectElement.value);
-                                                                        } else {
-                                                                            dateField.value = ""; // Limpiar el campo de fecha si no se selecciona nada
-
-                                                                            // Liberar posición
-                                                                            releasePosition(selectElement.getAttribute("data-previous-value"));
-                                                                        }
-                                                                    }
+                                                                  function updateDateTimeField
 
                                                                     // Función para actualizar las opciones de selección
                                                                     function updateSelectOptions(selectElement) {
@@ -1199,7 +1178,7 @@
                 <td>
                     <div class="col-md-3 mt-2">
                         <div class="form-group form-material">
-                            <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_${index}" name="products_insert[${index}][movement_date]" readonly>
+                            <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_${index}" name="products_insert[${index}][movement_date]">
                         </div>
                     </div>
                 </td>
@@ -1306,28 +1285,28 @@
 
             }
 
-            // Función para actualizar el campo de fecha y hora
-            function updateDateTimeField(selectElement, dateFieldId) {
-                const dateField = document.getElementById(dateFieldId);
+                            function updateDateTimeField(selectElement, dateFieldId) {
+                    const dateField = document.getElementById(dateFieldId);
 
-                if (selectElement.value !== "") {
-                    const now = new Date();
-                    const formattedDateTime = now.getFullYear() + '-' +
-                        ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
-                        ('0' + now.getDate()).slice(-2) + 'T' +
-                        ('0' + now.getHours()).slice(-2) + ':' +
-                        ('0' + now.getMinutes()).slice(-2);
-                    dateField.value = formattedDateTime;
+                    // Asignar la fecha y hora actual solo si el campo está vacío
+                    if (selectElement.value !== "" && dateField.value === "") {
+                        const now = new Date();
+                        const formattedDateTime = now.getFullYear() + '-' +
+                            ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                            ('0' + now.getDate()).slice(-2) + 'T' +
+                            ('0' + now.getHours()).slice(-2) + ':' +
+                            ('0' + now.getMinutes()).slice(-2);
+                        dateField.value = formattedDateTime;
 
-                    // Asignar posición
-                    assignPosition(selectElement.value);
-                } else {
-                    dateField.value = ""; // Clear the date field if no option is selected
+                        // Asignar posición
+                        assignPosition(selectElement.value);
+                    } else if (selectElement.value === "") {
+                        dateField.value = ""; // Limpiar el campo de fecha si no se selecciona nada
 
-                    // Liberar posición
-                    releasePosition(selectElement.getAttribute("data-previous-value"));
+                        // Liberar posición
+                        releasePosition(selectElement.getAttribute("data-previous-value"));
+                    }
                 }
-            }
 
             // Función para actualizar las opciones disponibles en los selects
             function updateSelectOptions(selectElement) {
