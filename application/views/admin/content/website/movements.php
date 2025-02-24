@@ -189,7 +189,7 @@
                                                                 <td>
                                                                     <?php echo $row->good_stock; ?>
                                                                 </td>
-                                                               
+
                                                                 <td>
                                                                     <?php echo $row->expiration_date; ?>
                                                                 </td>
@@ -355,104 +355,119 @@
                                                             <input type="hidden" name="id_arrivalnew" value="<?php echo $id_arrivalnew; ?>" />
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputText">N.Identificación de evento</label>
-                                                                <input type="text" class="form-control input-sm" value="<?php echo $identification_number; ?>" id="identification_number" name="identification_number" required readonly />
+                                                                <input type="text" class="form-control input-sm" value="<?php echo $identification_number; ?>" id="identification_number" name="identification_number" readonly />
+                                                                <input type="hidden" name="identification_number" value="<?php echo $identification_number; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputText">Pedido</label>
-                                                                <input type="text" class="form-control input-sm" value="<?php echo $sale_order; ?>" id="sale_order" name="sale_order" placeholder="Escribe el pedido" required readonly />
+                                                                <input type="text" class="form-control input-sm" value="<?php echo $sale_order; ?>" id="sale_order" name="sale_order" readonly />
+                                                                <input type="hidden" name="sale_order" value="<?php echo $sale_order; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputText">Cliente</label>
                                                                 <input type="text" class="form-control input-sm" value="<?php echo $nama_supplier; ?>" id="nama_supplier" readonly />
-                                                                <input type="hidden" name="id_supplier" value="<?php echo $id_supplier; ?>" id="id_supplier" />
+                                                                <input type="hidden" name="id_supplier" value="<?php echo $id_supplier; ?>" />
+                                                                <input type="hidden" name="nama_supplier" value="<?php echo $nama_supplier; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputText">Tipo de evento</label>
-                                                                <input type="text" class="form-control input-sm" value="<?php echo $event_type; ?>" id="event_type" name="event_type" placeholder="Introdu el tipo de evento" required readonly />
+                                                                <input type="text" class="form-control input-sm" value="<?php echo $event_type; ?>" id="event_type" name="event_type" readonly />
+                                                                <input type="hidden" name="event_type" value="<?php echo $event_type; ?>" />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="container_number">N.Identificación del contenedor</label>
-                                                                <select name="container_number" id="container_number" class="form-control" readonly>
+                                                                <select name="container_number" id="container_number" class="form-control" disabled>
                                                                     <option value="">Seleccione el N.Identificador del contenedor</option>
                                                                     <?php foreach ($containers as $container) : ?>
                                                                         <option value="<?= $container->container_number ?>" <?php echo ($container->container_number == $container_number) ? 'selected' : ''; ?>><?= $container->container_number ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <input type="hidden" name="container_number" value="<?= $container_number ?>" />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="container_type">Tipo de Contenedor</label>
-                                                                <select name="container_type" id="container_type" class="form-control" readonly>
+                                                                <select name="container_type" id="container_type" class="form-control" disabled>
                                                                     <option value="<?= $container_type ?>" selected><?= $container_type ?></option>
                                                                 </select>
+                                                                <input type="hidden" name="container_type" value="<?= $container_type ?>" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 mt-2">
                                                             <div class="form-group">
                                                                 <label for="id_origin">Origen</label>
-                                                                <select name="id_origin" id="id_origin" class="form-control" readonly>
+                                                                <select name="id_origin" id="id_origin" class="form-control" disabled>
                                                                     <option value="">Seleccione el Origen</option>
                                                                     <?php foreach ($origins as $origin) : ?>
                                                                         <option value="<?= $origin->id_origin ?>" <?php echo ($origin->id_origin == $id_origin) ? 'selected' : ''; ?>><?= $origin->state ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <input type="hidden" name="id_origin" value="<?= $id_origin ?>" />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="id_maneuver">Tipo de maniobra</label>
-                                                                <select name="id_maneuver" id="id_maneuver" class="form-control" readonly>
+                                                                <select name="id_maneuver" id="id_maneuver" class="form-control" disabled>
                                                                     <option value="">Seleccione el Origen</option>
                                                                     <?php foreach ($maneuvers as $maneuver) : ?>
                                                                         <option value="<?= $maneuver->id_maneuver ?>" <?php echo ($maneuver->id_maneuver == $id_maneuver) ? 'selected' : ''; ?>><?= $maneuver->type_maneuver ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <input type="hidden" name="id_maneuver" value="<?= $id_maneuver ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputDate">Fecha de evento</label>
-                                                                <input type="date" class="form-control input-sm" value="<?php echo $event_date; ?>" id="event_date" name="event_date" required readonly />
+                                                                <input type="date" class="form-control input-sm" value="<?php echo $event_date; ?>" id="event_date" name="event_date" readonly />
+                                                                <input type="hidden" name="event_date" value="<?php echo $event_date; ?>" />
                                                             </div>
-
                                                             <div class="form-group">
                                                                 <label for="platenumber">Número de placa</label>
-                                                                <select name="platenumber" id="platenumber" class="form-control" readonly>
+                                                                <select name="platenumber" id="platenumber" class="form-control" disabled>
                                                                     <option value="">Seleccione el número de placa</option>
                                                                     <?php foreach ($transports as $transport) : ?>
                                                                         <option value="<?= $transport->platenumber ?>" <?php echo ($transport->platenumber == $platenumber) ? 'selected' : ''; ?>><?= $transport->platenumber ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <input type="hidden" name="platenumber" value="<?= $platenumber ?>" />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="vehicletype">Tipo de Unidad / Transporte</label>
-                                                                <select name="vehicletype" id="vehicletype" class="form-control" readonly>
-                                                                    <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars( $vehicletype->vehicletype) : '' ?>" selected>
-                                                                    <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>   
+                                                                <select name="vehicletype" id="vehicletype" class="form-control" disabled>
+                                                                    <option value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" selected>
+                                                                        <?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : 'Seleccione un tipo de unidad' ?>
                                                                     </option>
                                                                 </select>
+                                                                <input type="hidden" name="vehicletype" value="<?= isset($vehicletype->vehicletype) ? htmlspecialchars($vehicletype->vehicletype) : '' ?>" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 mt2">
                                                             <div class="form-group">
                                                                 <label for="id_driver">Conductor</label>
-                                                                <select name="id_driver" id="id_driver" class="form-control" readonly>
+                                                                <select name="id_driver" id="id_driver" class="form-control" disabled>
                                                                     <option value="">Seleccione un tipo de pallet</option>
                                                                     <?php foreach ($drivers as $driver) : ?>
                                                                         <option value="<?= $driver->id_driver ?>" <?php echo ($driver->id_driver == $id_driver) ? 'selected' : ''; ?>><?= $driver->name_driver ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
+                                                                <input type="hidden" name="id_driver" value="<?= $id_driver ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputTime">Hora de llegada</label>
-                                                                <input type="time" value="<?php echo $arrival_time; ?>" class="form-control input-sm" id="arrival_time" name="arrival_time" required readonly>
+                                                                <input type="time" value="<?php echo $arrival_time; ?>" class="form-control input-sm" id="arrival_time" name="arrival_time" readonly>
+                                                                <input type="hidden" name="arrival_time" value="<?php echo $arrival_time; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputTime">Inicio de maniobra</label>
-                                                                <input type="time" class="form-control input-sm" value="<?php echo $maneuver_start; ?>" id="maneuver_start" name="maneuver_start" required readonly />
+                                                                <input type="time" class="form-control input-sm" value="<?php echo $maneuver_start; ?>" id="maneuver_start" name="maneuver_start" readonly />
+                                                                <input type="hidden" name="maneuver_start" value="<?php echo $maneuver_start; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputTime">Fin de maniobra</label>
-                                                                <input type="time" class="form-control input-sm" value="<?php echo $maneuver_end; ?>" id="maneuver_end" name="maneuver_end" required readonly />
+                                                                <input type="time" class="form-control input-sm" value="<?php echo $maneuver_end; ?>" id="maneuver_end" name="maneuver_end" readonly />
+                                                                <input type="hidden" name="maneuver_end" value="<?php echo $maneuver_end; ?>" />
                                                             </div>
                                                             <div class="form-group form-material">
                                                                 <label class="control-label" for="inputTime">Hora de salida</label>
-                                                                <input type="time" class="form-control input-sm" value="<?php echo $departure_time; ?>" id="departure_time" name="departure_time" required readonly />
+                                                                <input type="time" class="form-control input-sm" value="<?php echo $departure_time; ?>" id="departure_time" name="departure_time" readonly />
+                                                                <input type="hidden" name="departure_time" value="<?php echo $departure_time; ?>" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -622,7 +637,7 @@
                                                                             <td>
                                                                                 <div class="col-md-3 mt-2">
                                                                                     <div class="form-group form-material">
-                                                                                        <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_<?php echo $index; ?>" name="products_update[<?php echo $index; ?>][movement_date]" value="<?php echo $product->movement_date; ?>" >
+                                                                                        <input type="datetime-local" class="form-control input-sm" style="padding: 5px; font-size: 12px; text-align: center; width: 200px;" id="movement_date_<?php echo $index; ?>" name="products_update[<?php echo $index; ?>][movement_date]" value="<?php echo $product->movement_date; ?>">
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -719,7 +734,7 @@
                                                                 <?php endif; ?>
                                                                 <!-- Select -->
                                                                 <script>
-                                                                  function updateDateTimeField
+                                                                    function updateDateTimeField
 
                                                                     // Función para actualizar las opciones de selección
                                                                     function updateSelectOptions(selectElement) {
@@ -848,14 +863,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
                                         <div class="col-md-12 mt-5">
-                                                <div class='button center mt-2'>
-                                                    <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Guardar datos" id="validateButton2">
-                                                    <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/all_arrivals'" />
-                                                </div>
+                                            <div class='button center mt-2'>
+                                                <input class="btn btn-success btn-sm" type="submit" name="simpan" value="Guardar datos" id="validateButton2">
+                                                <input class="btn btn-danger btn-sm" type="reset" name="batal" value="Cancelar" onclick="location.href='<?php echo site_url(); ?>website/all_arrivals'" />
                                             </div>
+                                        </div>
                                     </div>
 
                                 </form>
@@ -1285,28 +1300,28 @@
 
             }
 
-                            function updateDateTimeField(selectElement, dateFieldId) {
-                    const dateField = document.getElementById(dateFieldId);
+            function updateDateTimeField(selectElement, dateFieldId) {
+                const dateField = document.getElementById(dateFieldId);
 
-                    // Asignar la fecha y hora actual solo si el campo está vacío
-                    if (selectElement.value !== "" && dateField.value === "") {
-                        const now = new Date();
-                        const formattedDateTime = now.getFullYear() + '-' +
-                            ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
-                            ('0' + now.getDate()).slice(-2) + 'T' +
-                            ('0' + now.getHours()).slice(-2) + ':' +
-                            ('0' + now.getMinutes()).slice(-2);
-                        dateField.value = formattedDateTime;
+                // Asignar la fecha y hora actual solo si el campo está vacío
+                if (selectElement.value !== "" && dateField.value === "") {
+                    const now = new Date();
+                    const formattedDateTime = now.getFullYear() + '-' +
+                        ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                        ('0' + now.getDate()).slice(-2) + 'T' +
+                        ('0' + now.getHours()).slice(-2) + ':' +
+                        ('0' + now.getMinutes()).slice(-2);
+                    dateField.value = formattedDateTime;
 
-                        // Asignar posición
-                        assignPosition(selectElement.value);
-                    } else if (selectElement.value === "") {
-                        dateField.value = ""; // Limpiar el campo de fecha si no se selecciona nada
+                    // Asignar posición
+                    assignPosition(selectElement.value);
+                } else if (selectElement.value === "") {
+                    dateField.value = ""; // Limpiar el campo de fecha si no se selecciona nada
 
-                        // Liberar posición
-                        releasePosition(selectElement.getAttribute("data-previous-value"));
-                    }
+                    // Liberar posición
+                    releasePosition(selectElement.getAttribute("data-previous-value"));
                 }
+            }
 
             // Función para actualizar las opciones disponibles en los selects
             function updateSelectOptions(selectElement) {
