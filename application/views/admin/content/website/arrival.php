@@ -3289,8 +3289,9 @@
                                                         <input type="hidden" name="id_main" value="<?php echo $id_main; ?>" />
 
                                                         <div class="form-group form-material">
-                                                            <label class="control-label" for="inputText">N.Identificación de evento</label>
-                                                            <input type="text" class="form-control input-sm" value="<?php echo $identification_number; ?>" id="identification_number" name="identification_number" required />
+                                                            <label class="control-label" for="inputText">N.Identificación de evento</label>                                                            
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $identification_number; ?>" id="identification_number" name="identification_number" readonly />
+                                                            <input type="hidden" name="identification_number" value="<?php echo $identification_number; ?>" />
                                                         </div>
                                                         <div class="form-group form-material">
                                                             <label class="control-label" for="inputText">Pedido</label>
@@ -3304,16 +3305,12 @@
                                                         </div>
                                                         <div class="form-group form-material">
                                                             <label class="control-label" for="inputText">Tipo de evento</label>
-                                                            <input type="text" class="form-control input-sm" value="<?php echo $event_type; ?>" id="event_type" name="event_type" placeholder="Introdu el tipo de evento" required />
+                                                            <input type="text" class="form-control input-sm" value="<?php echo $event_type; ?>" id="event_type" name="event_type" readonly />
+                                                            <input type="hidden" name="event_type" value="<?php echo $event_type; ?>" />
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="container_number">N.Identificación del contenedor</label>
-                                                            <select name="container_number" id="container_number" class="form-control">
-                                                                <option value="">Seleccione el N.Identificador del contenedor</option>
-                                                                <?php foreach ($containers as $container) : ?>
-                                                                    <option value="<?= $container->container_number ?>" <?php echo ($container->container_number == $container_number) ? 'selected' : ''; ?>><?= $container->container_number ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                                                            <input type="text" name="container_number" id="container_number" class="form-control" value="<?php echo isset ($container_number) ? $container_number : ''; ?>" placeholder="Escriba el número de contenedor">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="container_type">Tipo de Contenedor</label>
@@ -3325,21 +3322,41 @@
                                                     <div class="col-md-4 mt-2">
                                                         <div class="form-group">
                                                             <label for="id_origin">Origen</label>
-                                                            <select name="id_origin" id="id_origin" class="form-control">
-                                                                <option value="">Seleccione el Origen</option>
-                                                                <?php foreach ($origins as $origin) : ?>
-                                                                    <option value="<?= $origin->id_origin ?>" <?php echo ($origin->id_origin == $id_origin) ? 'selected' : ''; ?>><?= $origin->state ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
+                                                            <input type="text" name="origin_name" id="origin_name" class="form-control" value="<?php echo isset ($state) ? $state : ''; ?>" placeholder="Escriba el origen">
+                                                            <input type="hidden" name="id_origin" id="id_origin" value="<?php echo isset ($id_origin) ? $id_origin : ''; ?>">
+                                                        </div>                                                        
                                                         <div class="form-group">
                                                             <label for="id_maneuver">Tipo de maniobra</label>
-                                                            <select name="id_maneuver" id="id_maneuver" class="form-control">
-                                                                <option value="">Seleccione el Origen</option>
-                                                                <?php foreach ($maneuvers as $maneuver) : ?>
-                                                                    <option value="<?= $maneuver->id_maneuver ?>" <?php echo ($maneuver->id_maneuver == $id_maneuver) ? 'selected' : ''; ?>><?= $maneuver->type_maneuver ?></option>
-                                                                <?php endforeach; ?>
+                                                            <select name="id_maneuver" id="id_maneuver" class="form-control" disabled>
+                                                                <?php
+                                                                // Si la acción es 'tambah', mostrar solo "Descarga"
+                                                                if ($action == 'editar') {
+                                                                    
+                                                                    // Buscar la maniobra de tipo "Descarga" (insensible a mayúsculas/minúsculas)
+                                                                    $descargaManeuver = array_filter($maneuvers, function($maneuver) {
+                                                                        return strtolower($maneuver->type_maneuver) == strtolower('Descarga');
+                                                                    });
+
+                                                                    // Si se encontró la maniobra "Descarga", mostrarla como única opción
+                                                                    if (!empty($descargaManeuver)) {
+                                                                        $descargaManeuver = reset($descargaManeuver); // Obtener el primer elemento del array
+                                                                        ?>
+                                                                        <option value="<?= $descargaManeuver->id_maneuver ?>" selected>
+                                                                            <?= $descargaManeuver->type_maneuver ?>
+                                                                        </option>
+                                                                        <?php
+                                                                    }
+                                                                } else {
+                                                                    // Si no es 'tambah', mostrar todas las opciones
+                                                                    foreach ($maneuvers as $maneuver) : ?>
+                                                                        <option value="<?= $maneuver->id_maneuver ?>">
+                                                                            <?= $maneuver->type_maneuver ?>
+                                                                        </option>
+                                                                    <?php endforeach;
+                                                                }
+                                                                ?>
                                                             </select>
+                                                            <input type="hidden" name="id_maneuver" value="<?= $descargaManeuver->id_maneuver ?>">
                                                         </div>
                                                         <div class="form-group form-material">
                                                             <label class="control-label" for="inputDate">Fecha de evento</label>
@@ -3348,12 +3365,7 @@
 
                                                         <div class="form-group">
                                                             <label for="platenumber">Número de placa</label>
-                                                            <select name="platenumber" id="platenumber" class="form-control">
-                                                                <option value="">Seleccione el número de placa</option>
-                                                                <?php foreach ($transports as $transport) : ?>
-                                                                    <option value="<?= $transport->platenumber ?>" <?php echo ($transport->platenumber == $platenumber) ? 'selected' : ''; ?>><?= $transport->platenumber ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                                                            <input type="text" name="platenumber" id="platenumber" class="form-control" value="<?php echo isset($platenumber) ? $platenumber : ''; ?>" placeholder="Escriba el número de placa">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="vehicletype">Tipo de Unidad / Transporte</label>
@@ -3367,12 +3379,8 @@
                                                     <div class="col-md-4 mt2">
                                                         <div class="form-group">
                                                             <label for="id_driver">Conductor</label>
-                                                            <select name="id_driver" id="id_driver" class="form-control">
-                                                                <option value="">Seleccione un tipo de pallet</option>
-                                                                <?php foreach ($drivers as $driver) : ?>
-                                                                    <option value="<?= $driver->id_driver ?>" <?php echo ($driver->id_driver == $id_driver) ? 'selected' : ''; ?>><?= $driver->name_driver ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
+                                                            <input type="text" name="name_cond" id="name_cond" class="form-control" value="<?php echo isset($name_driver) ? $name_driver : ''; ?>" placeholder="Escriba el conductor">
+                                                            <input type="hidden" name="id_driver" id="id_driver" value="<?php echo isset($id_driver) ? $id_driver : ''; ?>">
                                                         </div>
                                                         <div class="form-group form-material">
                                                             <label class="control-label" for="inputTime">Hora de llegada</label>
@@ -3919,50 +3927,246 @@
         }
     </script>
 
+    <!--Autocompletado Numero de contenedor -->
     <script>
-        document.getElementById('container_number').addEventListener('change', function() {
-            var containerNumber = this.value;
-            if (containerNumber) {
-                fetch('<?= site_url('Website/get_container_type_by_number/') ?>' + containerNumber)
-                    .then(response => response.json())
-                    .then(data => {
-                        var containerTypeSelect = document.getElementById('container_type');
-                        containerTypeSelect.innerHTML = ''; // Limpiar opciones anteriores
-                        if (data.container_type) {
-                            var option = document.createElement('option');
-                            option.value = data.container_type;
-                            option.text = data.container_type;
-                            containerTypeSelect.add(option);
-                        }
-                    });
-            } else {
-                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
-                document.getElementById('container_type').innerHTML = '<option value="">Seleccione un tipo de contenedor</option>';
+        $(document).ready(function() {
+            // Variable para almacenar todos los números de contenedor
+            var allContainers = [];
+
+            // Función para cargar todos los números de contenedor desde el servidor
+            function loadAllContainers() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_container_numbers') ?>", // URL para obtener todos los números de contenedor
+                    dataType: "json",
+                    success: function(data) {
+                        allContainers = data; // Almacena todos los números de contenedor
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los números de contenedor:", error);
+                        alert("No se pudieron cargar los números de contenedor. Por favor, recarga la página.");
+                    }
+                });
             }
+
+            // Cargar todos los números de contenedor al iniciar la página
+            loadAllContainers();
+
+            // Configurar el autocompletado
+            $("#container_number").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los números de contenedor basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredContainers = allContainers.filter(function(container) {
+                        return container.label.toLowerCase().includes(term);
+                    });
+                    response(filteredContainers); // Enviar los números de contenedor filtrados al autocompletado
+                },
+                minLength: 1, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#container_number").val(ui.item.label);
+
+                    // Obtener el tipo de contenedor basado en el número de contenedor seleccionado
+                    fetch('<?= site_url('Website/get_container_type_by_number/') ?>' + ui.item.label)
+                        .then(response => response.json())
+                        .then(data => {
+                            var containerTypeSelect = document.getElementById('container_type');
+                            containerTypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                            if (data.container_type) {
+                                var option = document.createElement('option');
+                                option.value = data.container_type;
+                                option.text = data.container_type;
+                                containerTypeSelect.add(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error al obtener el tipo de contenedor:", error);
+                        });
+
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#container_number").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
+            // Evento para detectar cuando el campo de placa esté vacío
+            $("#container_number").on("input", function() {
+                if ($(this).val().trim() === "") {
+                    // Si el campo de placa está vacío, limpia el campo de tipo de vehículo
+                    $("#container_type").html('<option value="">Seleccione un tipo de unidad de transporte</option>');
+                }
+            });
         });
     </script>
+
+    <!--Autocompletado Placa -->
     <script>
-        document.getElementById('platenumber').addEventListener('change', function() {
-            var platenumber = this.value;
-            if (platenumber) {
-                fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
-                    .then(response => response.json())
-                    .then(data => {
-                        var vehicletypeSelect = document.getElementById('vehicletype');
-                        vehicletypeSelect.innerHTML = ''; // Limpiar opciones anteriores
-                        if (data.vehicletype) {
-                            var option = document.createElement('option');
-                            option.value = data.vehicletype;
-                            option.text = data.vehicletype;
-                            vehicletypeSelect.add(option);
+        $(document).ready(function() {
+            // Configura el autocompletado para el campo #platenumber
+            $("#platenumber").autocomplete({
+                source: function(request, response) {
+                    // Realiza una solicitud AJAX al servidor para obtener los números de placa
+                    $.ajax({
+                        url: "<?= site_url('Website/get_platenumbers') ?>", // URL del controlador
+                        dataType: "json",
+                        data: {
+                            term: request.term // Término de búsqueda
+                        },
+                        success: function(data) {
+                            // Envía los datos de respuesta al autocompletado
+                            response(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error en la solicitud AJAX:", error);
                         }
                     });
-            } else {
-                // Limpiar el tipo de contenedor si no hay número de contenedor seleccionado
-                document.getElementById('vehicletype').innerHTML = '<option value="">Seleccione un tipo de unidad</option>';
-            }
+                },
+                minLength: 1, // Número mínimo de caracteres para iniciar la búsqueda
+                select: function(event, ui) {
+                    // Cuando se selecciona un elemento, obtén el tipo de vehículo
+                    var platenumber = ui.item.value;
+                    fetch('<?= site_url('Website/get_vehicletype_by_platenumber/') ?>' + platenumber)
+                        .then(response => response.json())
+                        .then(data => {
+                            var vehicletypeSelect = document.getElementById('vehicletype');
+                            vehicletypeSelect.innerHTML = ''; // Limpiar opciones anteriores
+                            if (data.vehicletype) {
+                                var option = document.createElement('option');
+                                option.value = data.vehicletype;
+                                option.text = data.vehicletype;
+                                vehicletypeSelect.add(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error al obtener el tipo de vehículo:", error);
+                        });
+                }
+            });
+            // Evento para detectar cuando el campo de placa esté vacío
+            $("#platenumber").on("input", function() {
+                if ($(this).val().trim() === "") {
+                    // Si el campo de placa está vacío, limpia el campo de tipo de vehículo
+                    $("#vehicletype").html('<option value="">Seleccione un tipo de unidad de transporte</option>');
+                }
+            });
         });
     </script>
+
+    
+    <!--Autocompletado Origen -->
+    <script>
+        $(document).ready(function() {
+            // Variable para almacenar todos los orígenes
+            var allOrigins = [];
+
+            // Función para cargar todos los orígenes desde el servidor
+            function loadAllOrigins() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_origins') ?>", // URL para obtener todos los orígenes
+                    dataType: "json",
+                    success: function(data) {
+                        allOrigins = data; // Almacena todos los orígenes
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los orígenes:", error);
+                    }
+                });
+            }
+
+            // Cargar todos los orígenes al iniciar la página
+            loadAllOrigins();
+
+            // Configurar el autocompletado
+            $("#origin_name").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los orígenes basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredOrigins = allOrigins.filter(function(origin) {
+                        return origin.label.toLowerCase().includes(term);
+                    });
+                    response(filteredOrigins); // Enviar los orígenes filtrados al autocompletado
+                },
+                minLength: 1, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                    $("#origin_name").val(ui.item.label);
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#origin_name").val(ui.item.label); // Mostrar el nombre del origen
+                    $("#id_origin").val(ui.item.value); // Almacenar el ID del origen en el campo oculto
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#origin_name").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
+        });
+    </script>
+
+    <!--Autocompletado Conductor -->
+    <script>
+        $(document).ready(function() {
+            // Variable para almacenar todos los conductores
+            var allDrivers = [];
+
+            // Función para cargar todos los conductores desde el servidor
+            function loadAllDrivers() {
+                $.ajax({
+                    url: "<?= site_url('Website/get_all_drivers') ?>", // URL para obtener todos los conductores
+                    dataType: "json",
+                    success: function(data) {
+                        allDrivers = data; // Almacena todos los conductores
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar los conductores:", error);
+                    }
+                });
+            }
+
+            // Cargar todos los conductores al iniciar la página
+            loadAllDrivers();
+
+            // Configurar el autocompletado
+            $("#name_cond").autocomplete({
+                source: function(request, response) {
+                    // Filtrar los conductores basados en lo que el usuario ha escrito
+                    var term = request.term.toLowerCase();
+                    var filteredDrivers = allDrivers.filter(function(driver) {
+                        return driver.label.toLowerCase().includes(term);
+                    });
+                    response(filteredDrivers); // Enviar los conductores filtrados al autocompletado
+                },
+                minLength: 1, // Mostrar opciones incluso si no se ha escrito nada
+                focus: function(event, ui) {
+                    // Evitar que el campo se complete automáticamente al navegar por las opciones
+                    event.preventDefault();
+                    $("#name_cond").val(ui.item.label);
+                },
+                select: function(event, ui) {
+                    // Cuando se selecciona una opción, completar el campo con el valor seleccionado
+                    $("#name_cond").val(ui.item.label); // Mostrar el nombre del conductor
+                    $("#id_driver").val(ui.item.value); // Almacenar el ID del conductor en el campo oculto
+                    return false;
+                }
+            });
+
+            // Mostrar todas las opciones al hacer clic en el campo
+            $("#name_cond").on("focus", function() {
+                $(this).autocomplete("search", "");
+            });
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             // Delegación de eventos para manejar cálculos automáticos en filas dinámicas
